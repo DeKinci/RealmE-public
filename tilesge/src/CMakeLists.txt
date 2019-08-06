@@ -25,4 +25,5 @@ target_link_libraries(TilesGE ${OPENGL_gl_LIBRARY})
 
 target_link_libraries(TilesGE glfw)
 target_link_libraries(TilesGE glad)
+target_link_libraries(TilesGE glm)
 target_link_libraries(TilesGE lodepng)

@@ -1,9 +1,32 @@
-//
-// Created by DeKinci on 8/6/2019.
-//
-
 #include "Shader.h"
 
 Shader::Shader(const GLchar *vertexName, const GLchar *fragmentName) {
     this->ID = loadShaders(vertexName, fragmentName);
+}
+
+void Shader::use() {
+    glUseProgram(this->ID);
+}
+
+void Shader::attrib(const GLchar* name, GLint size, GLenum type, GLboolean normalized, GLsizei stride,
+                    const GLvoid *pointer) {
+    GLint aPosLocation = glGetAttribLocation(this->ID, name);
+    glVertexAttribPointer(aPosLocation, size, type, normalized, stride, pointer);
+    glEnableVertexAttribArray(aPosLocation);
+}
+
+void Shader::set(const std::string &name, bool value) const {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int) value);
+}
+
+void Shader::set(const std::string &name, int value) const {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::set(const std::string &name, float value) const {
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::set(const std::string &name, float first, float second, float third, float forth) const {
+    glUniform4f(glGetUniformLocation(ID, name.c_str()), first, second, third, forth);
 }

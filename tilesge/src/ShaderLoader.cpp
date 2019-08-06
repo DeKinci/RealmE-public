@@ -3,23 +3,22 @@
 //
 
 #include "ShaderLoader.h"
-#include <cmrc/cmrc.hpp>
-#include <vector>
 
 CMRC_DECLARE(shaders);
 
-GLuint loadShaders(const char *vertex_file_path, const char *fragment_file_path) {
+GLuint loadShaders(const char *vertexShaderResource, const char *fragmentShaderResource) {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
     auto fs = cmrc::shaders::get_filesystem();
 
-    auto vtx = fs.open(vertex_file_path);
+    auto vertexShaderName = std::string(vertexShaderResource) + ".glsl";
+    auto vtx = fs.open(vertexShaderName);
     auto VertexShaderCode = std::string(vtx.begin(), vtx.end());
 
-    // Read the Fragment Shader code from the file
-    auto clr = fs.open(fragment_file_path);
+    auto fragmentShaderName = std::string(fragmentShaderResource) + ".glsl";
+    auto clr = fs.open(fragmentShaderName);
     auto FragmentShaderCode = std::string(clr.begin(), clr.end());
 
     GLint Result = GL_FALSE;

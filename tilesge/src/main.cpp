@@ -3,27 +3,22 @@
 #include "linmath.h"
 #include "ShaderLoader.h"
 #include "TextureLoader.h"
+#include "Shader.h"
+#include "Texture.h"
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
 #include <iostream>
 #include <lodepng.h>
+#include <glm/glm.hpp>
 
-//static const struct {
-//    float x, y;
-//    float r, g, b;
-//} vertices[3] = {
-//        {-0.6f, -0.4f, 1.f, 0.f, 0.f},
-//        {0.6f,  -0.4f, 0.f, 1.f, 0.f},
-//        {0.f,   0.6f,  0.f, 0.f, 1.f}
-//};
 
 float vertices[] = {
-        // positions         // colors
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f,   // bottom left
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,    // top right
-        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // top left
+        // positions          // colors           // texture coords
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // bottom left
+        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
 };
 
 unsigned int indices[] = {  // note that we start from 0!
@@ -48,7 +43,7 @@ GLFWwindow *init() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow *window = glfwCreateWindow(640, 480, "Mah triangle", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(640, 480, "Mah doggo", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
@@ -61,6 +56,11 @@ GLFWwindow *init() {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
     glfwSwapInterval(1);
     return window;
 }
@@ -82,59 +82,48 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    Shader shader = Shader("vertex", "color");
+    shader.attrib("aPos", 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) nullptr);
+    shader.attrib("aColor", 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
+    shader.attrib("aTexCoord", 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (6 * sizeof(float)));
 
-//    Texture *texture = load();
-//    glEnable(GL_TEXTURE_2D);
-//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
-//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->u2, texture->v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->image);
-//    GLuint textureId;
-//    glGenTextures(1, &textureId);
-//    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    GLuint programID = loadShaders("vertex.glsl", "color.glsl");
-//    GLint mvp_location = glGetUniformLocation(programID, "MVP");
-//    GLint vpos_location = glGetAttribLocation(programID, "vPos");
-//    GLint vcol_location = glGetAttribLocation(programID, "vCol");
-//    glEnableVertexAttribArray(vpos_location);
-//    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void *) nullptr);
-//    glEnableVertexAttribArray(vcol_location);
-//    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void *) (sizeof(float) * 2));
-
-    GLint aPosLocation = glGetAttribLocation(programID, "aPos");
-    glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) nullptr);
-    glEnableVertexAttribArray(aPosLocation);
-    GLint aColorLocation = glGetAttribLocation(programID, "aColor");
-    glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3* sizeof(float)));
-    glEnableVertexAttribArray(aColorLocation);
+    auto * doggoTexture = new Texture("doggo", GL_LINEAR);
+//    auto * wallTexture = new Texture("wall", GL_LINEAR);
+//    doggoTexture->bind();
 
     glBindVertexArray(VertexArrayID);
 
     while (!glfwWindowShouldClose(window)) {
-//        int width, height;
-//        glfwGetFramebufferSize(window, &width, &height);
-//        float ratio = (float) width / (float) height;
-//
-//        mat4x4 m, p, mvp;
-//        mat4x4_identity(m);
-//        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
-//        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-//        mat4x4_mul(mvp, p, m);
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        float ratio = (float) width / (float) height;
 
-//        glViewport(0, 0, width, height);
+        mat4x4 m, p, mvp;
+        mat4x4_identity(m);
+        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+        mat4x4_mul(mvp, p, m);
+
+//        computeMatricesFromInputs();
+//        glm::mat4 ProjectionMatrix = getProjectionMatrix();
+//        glm::mat4 ViewMatrix = getViewMatrix();
+//        glm::mat4 ModelMatrix = glm::mat4(1.0);
+//        glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
         glClear(GL_COLOR_BUFFER_BIT);
-//        glBindTexture(GL_TEXTURE_2D, textureId);
 
-//        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat *) mvp);
-        glUseProgram(programID);
+        shader.use();
+        glUniformMatrix4fv(glGetUniformLocation(shader.ID, "MVP"), 1, GL_FALSE, (const GLfloat *) mvp);
 
         float timeValue = glfwGetTime();
-        float greenValue = sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(programID, "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        float r = 1.0 - (sin(4 * timeValue + 0) - 1) / 6.0f;
+        float g = 1.0 - (sin(4 * timeValue + 2) - 1) / 6.0f;
+        float b = 1.0 - (sin(4 * timeValue + 4) - 1) / 6.0f;
+        shader.set("glowColor", r, g, b, 1.0f);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+//        glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

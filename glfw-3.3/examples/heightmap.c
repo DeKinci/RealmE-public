@@ -434,7 +434,7 @@ int main(int argc, char** argv)
     glfwMakeContextCurrent(window);
     gladLoadGL(glfwGetProcAddress);
 
-    /* Prepare opengl resources for rendering */
+    /* Prepare opengl res for rendering */
     shader_program = make_shader_program(vertex_shader_text, fragment_shader_text);
 
     if (shader_program == 0u)

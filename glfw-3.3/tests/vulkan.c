@@ -997,7 +997,7 @@ demo_prepare_texture_image(struct demo *demo, const uint32_t *tex_colors,
 
 static void demo_destroy_texture_image(struct demo *demo,
                                        struct texture_object *tex_obj) {
-    /* clean up staging resources */
+    /* clean up staging res */
     vkDestroyImage(demo->device, tex_obj->image, NULL);
     vkFreeMemory(demo->device, tex_obj->mem, NULL);
 }

@@ -9,19 +9,6 @@ include(${Tiles_SOURCE_DIR}/cmakerc/CMakeRC.cmake)
 
 add_executable(TilesGE main.cpp ${helloworld_SRC})
 
-cmrc_add_resource_library(shaders
-        NAMESPACE shaders
-        WHENCE shaders
-        shaders/color.glsl
-        shaders/vertex.glsl
-        )
-
-cmrc_add_resource_library(textures
-        NAMESPACE textures
-        WHENCE textures
-        textures/doggo.png
-        )
-
 target_link_libraries(TilesGE shaders textures)
 
 set(CMAKE_CXX_STANDARD 17)

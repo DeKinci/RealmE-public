@@ -239,7 +239,7 @@ static GLFWbool openJoystickDevice(const char* path)
 
 #undef isBitSet
 
-// Frees all resources associated with the specified joystick
+// Frees all res associated with the specified joystick
 //
 static void closeJoystick(_GLFWjoystick* js)
 {

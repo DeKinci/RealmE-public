@@ -30,3 +30,8 @@ void Shader::set(const std::string &name, float value) const {
 void Shader::set(const std::string &name, float first, float second, float third, float forth) const {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), first, second, third, forth);
 }
+
+void Shader::set(const std::string &name, glm::mat4 matrix) {
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix
+    ));
+}

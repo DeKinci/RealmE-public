@@ -6,6 +6,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "ShaderLoader.h"
 
 class Shader
@@ -25,6 +28,7 @@ public:
     void set(const std::string &name, int value) const;
     void set(const std::string &name, float value) const;
     void set(const std::string &name, float first, float second, float third, float forth) const;
+    void set(const std::string &name, glm::mat4);
 };
 
 

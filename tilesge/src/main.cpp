@@ -18,6 +18,7 @@
 #include "Model.h"
 #include "Mesh.h"
 #include "CubeForge.h"
+#include "Textures.h"
 
 const float vertices[] =  {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -126,16 +127,16 @@ std::vector<Model *> *doCubes() {
 
     for (int i = -10; i < 10; i++)
         for (int j = -10; j < 10; j++)
-            vector->push_back(CubeForge::createCube(i, 0, j));
+            vector->push_back(CubeForge::createCube(Textures::doggo(), i, 0, j));
 
     for (int i = 1; i < 6; i++)
-        vector->push_back(CubeForge::createCube(0, i, 0));
+        vector->push_back(CubeForge::createCube(Textures::doggo(),0, i, 0));
 
     for (int y = 6; y < 10; y++)
         for (int i = -5; i < 5; i++)
             for (int j = -5; j < 5; j++)
                 if (sqrt(j * j + i * i) < 10 - y)
-                    vector->push_back(CubeForge::createCube(i, y, j));
+                    vector->push_back(CubeForge::createCube(Textures::doggo(), i, y, j));
 
     return vector;
 }

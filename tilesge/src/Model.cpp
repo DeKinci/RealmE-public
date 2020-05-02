@@ -24,8 +24,6 @@ Model::Model(Mesh &mesh, Shader &shader, Position *position) :
                       mesh.attributesLength * sizeof(float),
                       (void *) (attribute->position * sizeof(float)));
     }
-//    shader.attrib("aPos", 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) nullptr);
-//    shader.attrib("aTexCoord", 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
 
     shader.use();
     glBindVertexArray(id);

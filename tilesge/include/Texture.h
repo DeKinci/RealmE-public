@@ -1,7 +1,3 @@
-//
-// Created by DeKinci on 8/6/2019.
-//
-
 #ifndef TILESGE_TEXTURE_H
 #define TILESGE_TEXTURE_H
 
@@ -12,8 +8,8 @@ class Texture {
 public:
     GLuint ID;
 
-    Texture(const GLchar * name, GLuint magFilter);
-    void bind();
+    Texture(const GLchar *name, GLuint magFilter, GLuint activeTexture = GL_TEXTURE0);
+    void bind() const;
 };
 
 

@@ -6,7 +6,7 @@
 
 CMRC_DECLARE(shaders);
 
-GLuint loadShaders(const char *vertexShaderResource, const char *fragmentShaderResource) {
+GLuint ShaderLoader::loadShaders(const char *vertexShaderResource, const char *fragmentShaderResource) {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -53,24 +53,24 @@ GLuint loadShaders(const char *vertexShaderResource, const char *fragmentShaderR
     }
 
     // Link the program
-    GLuint ProgramID = glCreateProgram();
-    glAttachShader(ProgramID, VertexShaderID);
-    glAttachShader(ProgramID, FragmentShaderID);
-    glLinkProgram(ProgramID);
+    GLuint programID = glCreateProgram();
+    glAttachShader(programID, VertexShaderID);
+    glAttachShader(programID, FragmentShaderID);
+    glLinkProgram(programID);
 
     // Check the program
-    glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-    glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    glGetProgramiv(programID, GL_LINK_STATUS, &Result);
+    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
         std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-        glGetProgramInfoLog(ProgramID, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
+        glGetProgramInfoLog(programID, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
     }
 
-    glDetachShader(ProgramID, VertexShaderID);
-    glDetachShader(ProgramID, FragmentShaderID);
+    glDetachShader(programID, VertexShaderID);
+    glDetachShader(programID, FragmentShaderID);
 
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
 
-    return ProgramID;
+    return programID;
 }

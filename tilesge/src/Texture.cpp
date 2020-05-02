@@ -1,11 +1,7 @@
-//
-// Created by DeKinci on 8/6/2019.
-//
-
-
 #include "Texture.h"
 
-Texture::Texture(const GLchar *name, const GLuint magFilter) {
+Texture::Texture(const GLchar *name, const GLuint magFilter, GLuint activeTexture) {
+    glActiveTexture(activeTexture);
     GLuint texture;
     glGenTextures(1, &texture);
     this->ID = texture;
@@ -23,6 +19,6 @@ Texture::Texture(const GLchar *name, const GLuint magFilter) {
     tex->image = nullptr;
 }
 
-void Texture::bind() {
+void Texture::bind() const {
     glBindTexture(GL_TEXTURE_2D, this->ID);
 }

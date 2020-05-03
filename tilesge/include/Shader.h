@@ -21,6 +21,12 @@ public:
         static Shader shader("lightVertex", "lightColor");
         return shader;
     }
+    static Shader &fontShader() {
+        static Shader shader("fontVertex", "fontColor");
+        shader.use();
+        shader.set("projection", glm::ortho(0.0f, static_cast<float>(640), 0.0f, static_cast<float>(480)));
+        return shader;
+    }
 
     // the program ID
     GLuint ID;

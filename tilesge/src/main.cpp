@@ -19,126 +19,99 @@
 #include "Mesh.h"
 #include "CubeForge.h"
 #include "Textures.h"
-
-const float vertices[] =  {
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-};
+#include "Body.h"
+#include "FontLoader.h"
+#include "AppWindow.h"
 
 Camera camera;
+AppWindow *window;
 
-float deltaTime = 0.0f;    // Time between current frame and last frame
+float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 const int WIDTH = 640, HEIGHT = 480;
 float lastX = WIDTH / 2.0, lastY = HEIGHT / 2.0;
 bool firstMouse = true;
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-
 void error_callback(int error, const char *description);
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void keyPressed(GLFWwindow *window, int key);
 
-void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-
-GLFWwindow *init() {
+void init() {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Mah doggo", nullptr, nullptr);
-    if (!window) {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGL()) {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glEnable(GL_DEPTH_TEST);
-
-    glfwSwapInterval(1);
-    return window;
+    window = new AppWindow(camera, WIDTH, HEIGHT);
+    window->setKeyPress(keyPressed);
 }
 
-std::vector<Model *> *doCubes() {
-    auto vector = new std::vector<Model *>;
-
-    for (int i = -10; i < 10; i++)
-        for (int j = -10; j < 10; j++)
-            vector->push_back(CubeForge::createCube(Textures::doggo(), i, 0, j));
-
+void doTree(std::vector<Body *> *vector, int x, int y, int z) {
     for (int i = 1; i < 6; i++)
-        vector->push_back(CubeForge::createCube(Textures::doggo(),0, i, 0));
+        vector->push_back(CubeForge::createCube(Textures::slab(), x, i, z));
 
-    for (int y = 6; y < 10; y++)
+    for (int k = 6; k < 10; k++)
         for (int i = -5; i < 5; i++)
             for (int j = -5; j < 5; j++)
-                if (sqrt(j * j + i * i) < 10 - y)
-                    vector->push_back(CubeForge::createCube(Textures::doggo(), i, y, j));
+                if (sqrt(i * i + j * j) < 10 - k)
+                    vector->push_back(CubeForge::createCube(Textures::leaf(), x + i, k + y, z + j));
+}
 
-    return vector;
+std::vector<Body *> &doCubes() {
+    auto vector = new std::vector<Body *>;
+
+    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 4, 1);
+    dogg->setAcceleration(glm::vec3(0, -10, 0));
+    vector->push_back(dogg);
+
+    for (int i = -20; i < 20; i++)
+        for (int j = -20; j < 20; j++)
+            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j));
+
+    doTree(vector, 0, 0, 0);
+    doTree(vector, 7, 0, 7);
+
+    return *vector;
+}
+
+float koe = 1.0;
+float collY = 1;
+int collC = 0;
+
+void animate(std::vector<Body *> &vector) {
+    Body &bod = *vector[0];
+    auto pos = bod.getPosition();
+    auto vel = bod.getVelocity();
+    auto acc = bod.getAcceleration();
+    float dt = deltaTime;
+
+    if (abs(pos.y - collY) < 0.001 && vel.y < 0.001)
+        return;
+
+    float dSpeed = acc.y * deltaTime;
+    float nextY = pos.y + vel.y * deltaTime + dSpeed * deltaTime;
+
+    if (nextY <= collY) {
+        collC++;
+        float fix = (1 - nextY) * acc.y / vel.y;
+        if (abs(vel.y) < abs(fix)) {
+            fix = -vel.y;
+        }
+        vel.y += fix;
+//        std::cout << ++collC << " " << nextY << " " << fix << " ";
+//        std::cout << ++collC << " " << nextY << " ";
+
+        nextY = 2 * collY - nextY;
+//        std::cout << nextY << " " << vel.y;
+        vel.y += dSpeed;
+        vel.y = -vel.y * koe;
+//        std::cout << std::endl;
+    } else {
+        vel.y += dSpeed;
+    }
+
+    bod.setPosition(glm::vec3(pos.x, nextY, pos.z));
+    bod.setVelocity(vel);
 }
 
 int main() {
@@ -146,43 +119,57 @@ int main() {
     camera.setPos(glm::vec3(0, 4, 12));
     camera.setYaw(-90);
 
-    GLFWwindow *window = init();
-    std::vector<Model *> *cubes = doCubes();
+    init();
+    std::vector<Body *> &cubes = doCubes();
     Model *light = CubeForge::createLight(0, 50, 0);
 
-    while (!glfwWindowShouldClose(window)) {
-        float currentFrame = glfwGetTime();
+    Font &font = FontLoader::load("arial");
+
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    float currentFrame = glfwGetTime();
+    lastFrame = currentFrame;
+
+    while (!window->readyToClose()) {
+        currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 //        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (auto &cube : *cubes) {
-            cube->draw(camera);
+        font.show(camera, "firchik", 0, 0, VAO, VBO);
+
+        animate(cubes);
+        for (auto cube : cubes) {
+            cube->show(camera);
         }
 
-        light->draw(camera);
+        light->show(camera);
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        window->update();
     }
 
-    glfwDestroyWindow(window);
+    delete window;
+
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
-    camera.setAspectRatio((float) width / (float) height);
 }
 
 void error_callback(int error, const char *description) {
     fprintf(stderr, "Error: %s\n", description);
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+void keyPressed(GLFWwindow *window, int key) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -205,28 +192,3 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         camera.move(Direction::DOWN, cameraSpeed);
 }
-
-void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
-
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    camera.changeYaw(xoffset);
-    camera.changePitch(yoffset);
-}
-
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    camera.changeFov(-(float) yoffset);
-}
-

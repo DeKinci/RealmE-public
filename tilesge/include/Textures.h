@@ -13,6 +13,21 @@ public:
         static Texture doggoTexture("doggo", GL_LINEAR, GL_TEXTURE0);
         return doggoTexture;
     }
+
+    static Texture &leaf() {
+        static Texture doggoTexture("leaf", GL_LINEAR, GL_TEXTURE0);
+        return doggoTexture;
+    }
+
+    static Texture &slab() {
+        static Texture doggoTexture("slab", GL_LINEAR, GL_TEXTURE0);
+        return doggoTexture;
+    }
+
+    static Texture &grass() {
+        static Texture doggoTexture("grass", GL_LINEAR, GL_TEXTURE0);
+        return doggoTexture;
+    }
 };
 
 

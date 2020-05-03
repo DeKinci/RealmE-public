@@ -9,7 +9,7 @@ include(${Tiles_SOURCE_DIR}/cmakerc/CMakeRC.cmake)
 
 add_executable(TilesGE main.cpp ${helloworld_SRC})
 
-target_link_libraries(TilesGE shaders textures)
+target_link_libraries(TilesGE shaders textures fonts)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -27,3 +27,4 @@ target_link_libraries(TilesGE glfw)
 target_link_libraries(TilesGE glad)
 target_link_libraries(TilesGE glm)
 target_link_libraries(TilesGE lodepng)
+target_link_libraries(TilesGE freetype)

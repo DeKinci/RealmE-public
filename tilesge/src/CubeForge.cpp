@@ -5,17 +5,17 @@
 #include "CubeForge.h"
 
 
-Model *CubeForge::createCube(Texture &texture, int x, int y, int z) {
+Body *CubeForge::createCube(Texture &texture, int x, int y, int z) {
     auto attributes = new ShaderAttribute *[2];
     attributes[0] = new ShaderAttribute("aPos", 3, 0);
     attributes[1] = new ShaderAttribute("aTexCoord", 2, 3);
 
     auto mesh = new Mesh(vertices, sizeof(vertices), attributes, 2);
-    auto cube = new Model(*mesh, Shader::basicShader(), new Position((float) x, (float) y, (float) z, 1.f, 0.f, 0.f, 0.f));
+    auto model = new Model(*mesh, Shader::basicShader());
+    model->setTexture(texture);
 
-    cube->setTexture(texture);
-
-    return cube;
+    auto body = new Body(*model, glm::vec3(x, y, z));
+    return body;
 }
 
 Model *CubeForge::createLight(int x, int y, int z) {
@@ -23,7 +23,8 @@ Model *CubeForge::createLight(int x, int y, int z) {
     attributes[0] = new ShaderAttribute("aPos", 3, 0);
 
     auto mesh = new Mesh(lightVertices, sizeof(lightVertices), attributes, 1);
-    auto light = new Model(*mesh, Shader::lightShader(), new Position(x, y, z, 1.f, 0.f, 0.f, 0.f));
+    auto light = new Model(*mesh, Shader::lightShader());
+    light->setPosition(glm::vec3(x, y, z));
 
     light->shader.set("objectColor", glm::vec3(1.0f, 1.0f, 0.5f));
     light->shader.set("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));

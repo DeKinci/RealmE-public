@@ -10,14 +10,14 @@
 
 class Model {
 public:
-    Model(Mesh &mesh, Shader &shader, Position *position = new Position(0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f));
+    Model(Mesh &mesh, Shader &shader);
     ~Model();
 
     void setTexture(const Texture &texture);
 
-    void setPosition(Position *position);
+    void setPosition(const glm::vec3 &position);
 
-    void draw(Camera &camera);
+    void show(Camera &camera);
 
     void use();
 
@@ -27,7 +27,7 @@ public:
 
 private:
     Mesh &mesh;
-    Position *position;
+    glm::vec3 position;
     glm::mat4 posModel;
     bool text = false;
     const Texture *texture;

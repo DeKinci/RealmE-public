@@ -1,12 +1,9 @@
 #include "Model.h"
 #include <iostream>
 
-Model::Model(Mesh &mesh, Shader &shader, Position *position) :
+Model::Model(Mesh &mesh, Shader &shader) :
         shader{shader},
         mesh{mesh} {
-
-    setPosition(position);
-
     GLuint vertexArrayID;
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
@@ -36,15 +33,7 @@ void Model::setTexture(const Texture &texture) {
     text = true;
 }
 
-void Model::setPosition(Position *position) {
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, position->getCoords());
-    model = glm::rotate(model, position->getRotationAngle(), position->getRotation());
-    posModel = model;
-    this->position = position;
-}
-
-void Model::draw(Camera &camera) {
+void Model::show(Camera &camera) {
     glBindVertexArray(id);
     shader.use();
     if (text) {
@@ -55,15 +44,21 @@ void Model::draw(Camera &camera) {
     shader.set("model", posModel);
 //    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
     glDrawArrays(GL_TRIANGLES, 0, mesh.verticesAmount);
-//    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 Model::~Model() {
     delete &mesh;
-    delete position;
 }
 
 void Model::use() {
     shader.use();
     glBindVertexArray(id);
+}
+
+void Model::setPosition(const glm::vec3 &position) {
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, position);
+//    model = glm::rotate(model, position->getRotationAngle(), position->getRotation());
+    posModel = model;
+    Model::position = position;
 }

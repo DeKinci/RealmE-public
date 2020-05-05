@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <map>
-#include "Camera.h"
+#include "AppWindow.h"
 #include "Shader.h"
 #include <string>
 
@@ -23,10 +23,12 @@ class Font {
 public:
     explicit Font(std::map<char, Symbol> characters);
 
-    void show(Camera &camera, std::string text, float x, float y, GLuint VAO, GLuint VBO);
+    void show(AppWindow &window, std::string text, float x, float y);
 
 private:
     std::map<char, Symbol> Characters;
+    GLuint vao;
+    GLuint vbo;
 };
 
 

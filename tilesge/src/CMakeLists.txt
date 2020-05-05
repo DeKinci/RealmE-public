@@ -12,6 +12,7 @@ add_executable(TilesGE main.cpp ${helloworld_SRC})
 target_link_libraries(TilesGE shaders textures fonts)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-std=c++0x")
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)

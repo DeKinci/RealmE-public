@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cstdlib>
+#include <glm/glm.hpp>
 #include "Camera.h"
 
 class AppWindow {
@@ -22,6 +23,8 @@ public:
 
     void update();
 
+    const glm::mat4 &getProjector() const;
+
 private:
     int width;
     int height;
@@ -30,6 +33,7 @@ private:
     bool firstMouse = true;
     GLFWwindow *window;
     Camera &camera;
+    glm::mat4 projector;
 
     void (*keyPress)(GLFWwindow *, int);
 

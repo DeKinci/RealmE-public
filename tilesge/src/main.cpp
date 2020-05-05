@@ -14,6 +14,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include <string>
+#include <algorithm>
+#include <thread>
+#include <functional>
 #include "Camera.h"
 #include "Model.h"
 #include "Mesh.h"
@@ -22,7 +26,10 @@
 #include "Body.h"
 #include "FontLoader.h"
 #include "AppWindow.h"
+#include "ThreadPool.h"
+#include "NewtonianPhysicsProcessor.h"
 
+ThreadPool pool(7);
 Camera camera;
 AppWindow *window;
 
@@ -30,8 +37,6 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 const int WIDTH = 640, HEIGHT = 480;
-float lastX = WIDTH / 2.0, lastY = HEIGHT / 2.0;
-bool firstMouse = true;
 
 void error_callback(int error, const char *description);
 
@@ -61,25 +66,29 @@ std::vector<Body *> &doCubes() {
     auto vector = new std::vector<Body *>;
 
     auto dogg = CubeForge::createCube(Textures::doggo(), -5, 4, 1);
-    dogg->setAcceleration(glm::vec3(0, -10, 0));
     vector->push_back(dogg);
 
-    for (int i = -20; i < 20; i++)
-        for (int j = -20; j < 20; j++)
+    for (int i = -10; i < 10; i++)
+        for (int j = -10; j < 10; j++)
             vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j));
 
+//    for (int i = -10; i < 10; i++)
+//        for (int j = -10; j < 10; j++)
+//            doTree(vector, i * 10, 0, j * 10);
     doTree(vector, 0, 0, 0);
-    doTree(vector, 7, 0, 7);
+//    doTree(vector, 7, 0, 7);
 
+    for (auto bod : *vector)
+        bod->setAcceleration(glm::vec3(0, -10, 0));
     return *vector;
 }
 
 float koe = 1.0;
-float collY = 1;
+float collY = -1;
 int collC = 0;
 
-void animate(std::vector<Body *> &vector) {
-    Body &bod = *vector[0];
+void animate(Body &bod) {
+
     auto pos = bod.getPosition();
     auto vel = bod.getVelocity();
     auto acc = bod.getAcceleration();
@@ -114,6 +123,34 @@ void animate(std::vector<Body *> &vector) {
     bod.setVelocity(vel);
 }
 
+void panim(std::vector<Body *> &vector, int start, int end) {
+    for (int i = start; i < end; i++)
+        animate(*(vector[i]));
+}
+
+typedef void (*partanim)(std::vector<Body *> &, int, int);
+
+void anim(std::vector<Body *> &vector) {
+    NewtonianPhysicsProcessor::updatePositions(deltaTime, vector);
+//    int size = vector.size();
+//    int n = 7;
+//    int load = size / n;
+//
+//    partanim p = [](std::vector<Body *> &vector, int start, int end) { panim(vector, start, end); };
+//    std::vector<std::future<void>> queued;
+//    for (int i = 0; i < n - 1; i++) {
+//        int start = i * load;
+//        int end = (i + 1) * load;
+//
+//        queued.emplace_back(pool.enqueue(p, vector, start, end));
+//    }
+//
+//    queued.emplace_back(pool.enqueue(p, vector, (n - 1) * load, size));
+//
+//    for (auto &f : queued)
+//        f.get();
+}
+
 int main() {
     camera.setAspectRatio((float) WIDTH / (float) HEIGHT);
     camera.setPos(glm::vec3(0, 4, 12));
@@ -125,36 +162,31 @@ int main() {
 
     Font &font = FontLoader::load("arial");
 
-    unsigned int VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    float currentFrame = glfwGetTime();
-    lastFrame = currentFrame;
+    lastFrame = glfwGetTime();
+    float fps[60] = {0,};
+    int fpsPointer = 0;
 
     while (!window->readyToClose()) {
-        currentFrame = glfwGetTime();
+        float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 //        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        font.show(camera, "firchik", 0, 0, VAO, VBO);
-
-        animate(cubes);
+        anim(cubes);
         for (auto cube : cubes) {
             cube->show(camera);
         }
 
         light->show(camera);
 
+        fps[fpsPointer] = 1 / deltaTime;
+        fpsPointer = ++fpsPointer % 60;
+        float sumFps = 0;
+        for (float fp : fps)
+            sumFps += fp;
+
+        font.show(*window, std::to_string(lroundf(sumFps / 60)), 10, 10);
         window->update();
     }
 

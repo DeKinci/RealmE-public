@@ -17,8 +17,6 @@ Font &FontLoader::load(std::string fontName) {
     if (FT_New_Memory_Face(ft, (FT_Byte*) textureResource.begin(), textureResource.size(), 0, &face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-    std::cout << face->num_faces << " " << face->charmap->face << std::endl;
-
     if (FT_Set_Pixel_Sizes(face, 48, 48))
         std::cout << "ERROR::FREETYPE: Failed to set pixel size" << std::endl;
 

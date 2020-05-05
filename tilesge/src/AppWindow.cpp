@@ -101,6 +101,7 @@ void AppWindow::sizeCallback(int newWidth, int newHeight) {
     height = newHeight;
 
     glViewport(0, 0, width, height);
+    projector = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
     camera.setAspectRatio((float) width / (float) height);
 }
 
@@ -119,4 +120,8 @@ void AppWindow::update() {
 
 AppWindow::~AppWindow() {
     glfwDestroyWindow(window);
+}
+
+const glm::mat4 &AppWindow::getProjector() const {
+    return projector;
 }

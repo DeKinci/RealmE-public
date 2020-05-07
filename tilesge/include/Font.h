@@ -2,8 +2,8 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#ifndef FREETYPE_FONT_H
-#define FREETYPE_FONT_H
+#ifndef TILESGE_FONT_H
+#define TILESGE_FONT_H
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif //FREETYPE_FONT_H
+#endif //TILESGE_FONT_H

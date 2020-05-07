@@ -2,8 +2,8 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#ifndef FREETYPE_FONTLOADER_H
-#define FREETYPE_FONTLOADER_H
+#ifndef TILESGE_FONTLOADER_H
+#define TILESGE_FONTLOADER_H
 
 #include <cmrc/cmrc.hpp>
 #include <glad/glad.h>
@@ -18,4 +18,4 @@ public:
 };
 
 
-#endif //FREETYPE_FONTLOADER_H
+#endif //TILESGE_FONTLOADER_H

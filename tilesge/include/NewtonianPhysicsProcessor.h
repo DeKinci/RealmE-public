@@ -9,12 +9,18 @@
 #include <glm/gtx/norm.hpp>
 
 #include "Body.h"
+#include "ThreadPool.h"
 
 #define EPSILON_SQ 0.001
 
 class NewtonianPhysicsProcessor {
 public:
-    static void updatePositions(float deltaTime, const std::vector<Body *> &bodies);
+    explicit NewtonianPhysicsProcessor(size_t cores);
+    void updatePositions(float deltaTime, std::vector<Body *> &bodies);
+
+private:
+    ThreadPool *threadPool;
+    static void updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start, size_t end);
 };
 
 

@@ -69,6 +69,8 @@ AppWindow::AppWindow(Camera &camera, int width, int height) :
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
     keyPress(window, key);
 }
 

@@ -2,8 +2,8 @@
 // Created by DeKinci on 5/4/2020.
 //
 
-#ifndef FREETYPE_THREADPOOL_H
-#define FREETYPE_THREADPOOL_H
+#ifndef TILESGE_THREADPOOL_H
+#define TILESGE_THREADPOOL_H
 
 #include <vector>
 #include <queue>
@@ -56,4 +56,4 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
     return res;
 }
 
-#endif //FREETYPE_THREADPOOL_H
+#endif //TILESGE_THREADPOOL_H

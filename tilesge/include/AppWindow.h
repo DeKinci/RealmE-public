@@ -2,8 +2,8 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#ifndef FREETYPE_APPWINDOW_H
-#define FREETYPE_APPWINDOW_H
+#ifndef TILESGE_APPWINDOW_H
+#define TILESGE_APPWINDOW_H
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif //FREETYPE_APPWINDOW_H
+#endif //TILESGE_APPWINDOW_H

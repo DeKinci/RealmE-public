@@ -32,6 +32,7 @@
 ThreadPool pool(7);
 Camera camera;
 AppWindow *window;
+NewtonianPhysicsProcessor physicsProcessor(7);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -66,6 +67,7 @@ std::vector<Body *> &doCubes() {
     auto vector = new std::vector<Body *>;
 
     auto dogg = CubeForge::createCube(Textures::doggo(), -5, 4, 1);
+//    dogg->setAcceleration(glm::vec3(0, -10, 0));
     vector->push_back(dogg);
 
     for (int i = -10; i < 10; i++)
@@ -81,74 +83,6 @@ std::vector<Body *> &doCubes() {
     for (auto bod : *vector)
         bod->setAcceleration(glm::vec3(0, -10, 0));
     return *vector;
-}
-
-float koe = 1.0;
-float collY = -1;
-int collC = 0;
-
-void animate(Body &bod) {
-
-    auto pos = bod.getPosition();
-    auto vel = bod.getVelocity();
-    auto acc = bod.getAcceleration();
-    float dt = deltaTime;
-
-    if (abs(pos.y - collY) < 0.001 && vel.y < 0.001)
-        return;
-
-    float dSpeed = acc.y * deltaTime;
-    float nextY = pos.y + vel.y * deltaTime + dSpeed * deltaTime;
-
-    if (nextY <= collY) {
-        collC++;
-        float fix = (1 - nextY) * acc.y / vel.y;
-        if (abs(vel.y) < abs(fix)) {
-            fix = -vel.y;
-        }
-        vel.y += fix;
-//        std::cout << ++collC << " " << nextY << " " << fix << " ";
-//        std::cout << ++collC << " " << nextY << " ";
-
-        nextY = 2 * collY - nextY;
-//        std::cout << nextY << " " << vel.y;
-        vel.y += dSpeed;
-        vel.y = -vel.y * koe;
-//        std::cout << std::endl;
-    } else {
-        vel.y += dSpeed;
-    }
-
-    bod.setPosition(glm::vec3(pos.x, nextY, pos.z));
-    bod.setVelocity(vel);
-}
-
-void panim(std::vector<Body *> &vector, int start, int end) {
-    for (int i = start; i < end; i++)
-        animate(*(vector[i]));
-}
-
-typedef void (*partanim)(std::vector<Body *> &, int, int);
-
-void anim(std::vector<Body *> &vector) {
-    NewtonianPhysicsProcessor::updatePositions(deltaTime, vector);
-//    int size = vector.size();
-//    int n = 7;
-//    int load = size / n;
-//
-//    partanim p = [](std::vector<Body *> &vector, int start, int end) { panim(vector, start, end); };
-//    std::vector<std::future<void>> queued;
-//    for (int i = 0; i < n - 1; i++) {
-//        int start = i * load;
-//        int end = (i + 1) * load;
-//
-//        queued.emplace_back(pool.enqueue(p, vector, start, end));
-//    }
-//
-//    queued.emplace_back(pool.enqueue(p, vector, (n - 1) * load, size));
-//
-//    for (auto &f : queued)
-//        f.get();
 }
 
 int main() {
@@ -173,7 +107,7 @@ int main() {
 //        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        anim(cubes);
+        physicsProcessor.updatePositions(deltaTime, cubes);
         for (auto cube : cubes) {
             cube->show(camera);
         }
@@ -201,8 +135,6 @@ void error_callback(int error, const char *description) {
 }
 
 void keyPressed(GLFWwindow *window, int key) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)

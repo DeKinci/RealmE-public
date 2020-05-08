@@ -4,12 +4,15 @@
 
 #include "AppWindow.h"
 
-AppWindow::AppWindow(Camera &camera, int width, int height) :
+#include <utility>
+
+AppWindow::AppWindow(Camera *camera, size_t width, size_t height, bool debug) :
         camera(camera),
         width(width),
         height(height),
         lastX(width / 2.0),
         lastY(width / 2.0) {
+    AppWindow::debug = debug;
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -72,7 +75,15 @@ AppWindow::AppWindow(Camera &camera, int width, int height) :
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-    keyPress(window, key);
+    if (debug) {
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+    }
+    keyPress(key);
 }
 
 void AppWindow::cursorCallback(double xpos, double ypos) {
@@ -91,12 +102,12 @@ void AppWindow::cursorCallback(double xpos, double ypos) {
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    camera.changeYaw(xoffset);
-    camera.changePitch(yoffset);
+    camera->changeYaw(xoffset);
+    camera->changePitch(yoffset);
 }
 
 void AppWindow::scrollCallback(double xoffset, double yoffset) {
-    camera.changeFov(-(float) yoffset);
+    camera->changeFov(-(float) yoffset);
 }
 
 void AppWindow::sizeCallback(int newWidth, int newHeight) {
@@ -105,11 +116,11 @@ void AppWindow::sizeCallback(int newWidth, int newHeight) {
 
     glViewport(0, 0, width, height);
     projector = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-    camera.setAspectRatio((float) width / (float) height);
+    camera->setAspectRatio((float) width / (float) height);
 }
 
-void AppWindow::setKeyPress(void (*keyPress)(GLFWwindow *, int)) {
-    AppWindow::keyPress = keyPress;
+void AppWindow::setKeyPress(std::function<void(int)> callback) {
+    AppWindow::keyPress = std::move(callback);
 }
 
 bool AppWindow::readyToClose() {
@@ -122,9 +133,14 @@ void AppWindow::update() {
 }
 
 AppWindow::~AppWindow() {
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
     glfwDestroyWindow(window);
 }
 
 const glm::mat4 &AppWindow::getProjector() const {
     return projector;
+}
+
+int AppWindow::getKeyState(int key) {
+    return glfwGetKey(window, key);
 }

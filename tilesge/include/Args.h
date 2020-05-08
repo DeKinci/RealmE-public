@@ -16,9 +16,15 @@ public:
 
     const std::string &getLogfile() const;
 
+    size_t getWidth() const;
+
+    size_t getHeight() const;
+
 private:
     bool debug = false;
     std::string logfile = "log.log";
+    size_t width = 640;
+    size_t height = 480;
 };
 
 

@@ -1,6 +1,6 @@
 include_directories(${Tiles_SOURCE_DIR}/tilesge/include ${Tiles_SOURCE_DIR}/tilesge/inclib)
 
-file(GLOB helloworld_SRC
+file(GLOB_RECURSE helloworld_SRC
         "*.h"
         "*.cpp"
         )

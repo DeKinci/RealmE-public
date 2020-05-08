@@ -7,7 +7,7 @@
 
 #include <glm/gtx/norm.hpp>
 
-#include "Model.h"
+#include "graphics/Model.h"
 
 #define EPSILON_SQ 0.001
 

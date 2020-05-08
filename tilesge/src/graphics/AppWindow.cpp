@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#include "AppWindow.h"
+#include "graphics/AppWindow.h"
 
 #include <utility>
 

@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/1/2020.
 //
 
-#include "CubeForge.h"
+#include "game/CubeForge.h"
 
 
 Body *CubeForge::createCube(Texture &texture, int x, int y, int z) {

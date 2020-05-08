@@ -10,7 +10,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "Font.h"
-#include "Log.h"
+#include "utils/Log.h"
 
 class FontLoader {
 public:

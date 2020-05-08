@@ -1,5 +1,4 @@
-#include "Model.h"
-#include <iostream>
+#include "graphics/Model.h"
 
 Model::Model(Mesh &mesh, Shader &shader) :
         shader{shader},

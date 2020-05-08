@@ -10,7 +10,7 @@
 #include <functional>
 #include <cstdlib>
 #include <glm/glm.hpp>
-#include "Camera.h"
+#include "graphics/Camera.h"
 
 class AppWindow {
 public:

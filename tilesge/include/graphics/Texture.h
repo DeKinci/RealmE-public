@@ -2,7 +2,7 @@
 #define TILESGE_TEXTURE_H
 
 #include <glad/glad.h>
-#include <TextureLoader.h>
+#include <graphics/TextureLoader.h>
 
 class Texture {
 public:

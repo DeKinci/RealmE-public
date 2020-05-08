@@ -6,7 +6,6 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Camera.h"
-#include "Position.h"
 
 class Model {
 public:

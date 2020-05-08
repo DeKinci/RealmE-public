@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "graphics/Mesh.h"
 
 Mesh::Mesh(const float *vertices, size_t verticesSize, ShaderAttribute *attributes[], size_t attributesSize) : vertices(
         vertices), verticesSize(verticesSize), attributesSize(attributesSize), attributes(attributes) {

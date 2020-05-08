@@ -2,7 +2,7 @@
 // Created by DeKinci on 8/11/2019.
 //
 
-#include "Camera.h"
+#include "graphics/Camera.h"
 
 void Camera::move(Direction direction, float amount) {
     switch (direction) {

@@ -2,7 +2,7 @@
 // Created by DeKinci on 8/6/2019.
 //
 
-#include "ShaderLoader.h"
+#include "graphics/ShaderLoader.h"
 
 CMRC_DECLARE(shaders);
 

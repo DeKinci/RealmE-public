@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#include "Body.h"
+#include "physics/Body.h"
 
 Body::Body(Model &model, const glm::vec3 &position) : model{model}, position{position} {
     model.setPosition(position);

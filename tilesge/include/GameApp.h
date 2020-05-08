@@ -7,13 +7,13 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Args.h"
-#include "Log.h"
-#include "AppWindow.h"
-#include "Camera.h"
-#include "CubeForge.h"
-#include "FontLoader.h"
-#include "NewtonianPhysicsProcessor.h"
+#include "utils/Args.h"
+#include "utils/Log.h"
+#include "graphics/AppWindow.h"
+#include "graphics/Camera.h"
+#include "game/CubeForge.h"
+#include "graphics/FontLoader.h"
+#include "physics/NewtonianPhysicsProcessor.h"
 
 class GameApp {
 public:

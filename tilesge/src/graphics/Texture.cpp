@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "graphics/Texture.h"
 
 Texture::Texture(const GLchar *name, const GLuint magFilter, GLuint activeTexture) {
     glActiveTexture(activeTexture);

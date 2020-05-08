@@ -8,9 +8,9 @@
 #include <vector>
 #include <glm/gtx/norm.hpp>
 
-#include "Log.h"
+#include "utils/Log.h"
 #include "Body.h"
-#include "ThreadPool.h"
+#include "utils/ThreadPool.h"
 
 #define EPSILON_SQ 0.001
 

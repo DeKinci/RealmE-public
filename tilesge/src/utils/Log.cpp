@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/8/2020.
 //
 
-#include "Log.h"
+#include "utils/Log.h"
 
 void Log::init(const std::string &file, bool debug) {
     spdlog::init_thread_pool(8192, 1);

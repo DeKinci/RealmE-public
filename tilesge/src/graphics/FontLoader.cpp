@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/3/2020.
 //
 
-#include "FontLoader.h"
+#include "graphics/FontLoader.h"
 
 CMRC_DECLARE(fonts);
 

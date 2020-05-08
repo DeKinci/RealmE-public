@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/4/2020.
 //
 
-#include "NewtonianPhysicsProcessor.h"
+#include "physics/NewtonianPhysicsProcessor.h"
 
 NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
         queued{*new std::vector<std::future<void>>()},

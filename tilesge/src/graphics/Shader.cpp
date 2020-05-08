@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "graphics/Shader.h"
 
 Shader::Shader(const GLchar *vertexName, const GLchar *fragmentName) {
     this->ID = ShaderLoader::loadShaders(vertexName, fragmentName);

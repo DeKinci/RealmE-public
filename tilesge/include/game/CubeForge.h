@@ -5,11 +5,11 @@
 #ifndef TILESGE_CUBEFORGE_H
 #define TILESGE_CUBEFORGE_H
 
-#include "Model.h"
-#include "Mesh.h"
-#include "Textures.h"
-#include "Shader.h"
-#include "Body.h"
+#include "graphics/Model.h"
+#include "graphics/Mesh.h"
+#include "graphics/Textures.h"
+#include "graphics/Shader.h"
+#include "physics/Body.h"
 
 class CubeForge {
 public:

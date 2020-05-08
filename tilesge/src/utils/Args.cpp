@@ -2,7 +2,7 @@
 // Created by DeKinci on 5/9/2020.
 //
 
-#include "Args.h"
+#include "utils/Args.h"
 
 Args::Args(int argc, char **argv) {
     CLI::App app{"Shitty game engine"};

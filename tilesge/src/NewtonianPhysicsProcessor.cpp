@@ -12,7 +12,7 @@ NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
 
 void NewtonianPhysicsProcessor::updatePositions(float deltaTime, std::vector<Body *> &bodies) {
     size_t load = bodies.size() / cores;
-    spdlog::debug("load {} size {} batched {}", load, bodies.size(), load * (cores - 1));
+    Log::debug("load {} size {} batched {}", load, bodies.size(), load * (cores - 1));
 
     queued.emplace_back(threadPool.enqueue(updateSomePositions, deltaTime, bodies, (cores - 1) * load, bodies.size()));
     for (size_t i = 0; i < cores - 1; i++) {
@@ -22,7 +22,7 @@ void NewtonianPhysicsProcessor::updatePositions(float deltaTime, std::vector<Bod
     for (auto &f : queued)
         f.get();
     queued.clear();
-    spdlog::debug("physics processed");
+    Log::debug("physics processed");
 }
 
 void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start,

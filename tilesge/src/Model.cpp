@@ -28,7 +28,7 @@ Model::Model(Mesh &mesh, Shader &shader) :
 
 void Model::setTexture(const Texture &texture) {
     shader.use();
-    shader.set("texture", 0);
+    shader.set("texture1", 0);
     this->texture = &texture;
     text = true;
 }

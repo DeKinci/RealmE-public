@@ -4,12 +4,11 @@
 #include "Shader.h"
 #include "Texture.h"
 #include <cstdlib>
-#include <cstdio>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <vector>
+#include "CLI11.hpp"
 #include <string>
 #include "Camera.h"
 #include "Model.h"
@@ -20,11 +19,8 @@
 #include "AppWindow.h"
 #include "ThreadPool.h"
 #include "NewtonianPhysicsProcessor.h"
-#include <spdlog/spdlog.h>
-#include <spdlog/async.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/rotating_file_sink.h>
+#include "Log.h"
+#include "Args.h"
 
 
 Camera camera;
@@ -36,32 +32,18 @@ float lastFrame = 0.0f;
 
 const int WIDTH = 640, HEIGHT = 480;
 
-void error_callback(int error, const char *description);
-
 void keyPressed(GLFWwindow *window, int key);
 
 void init() {
-    spdlog::init_thread_pool(8192, 1);
-    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt >();
-    stdout_sink->set_level(spdlog::level::info);
-    auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("../../../logs/log.log", 1024*1024*10, 3, true);
-    rotating_sink->set_level(spdlog::level::debug);
-    std::vector<spdlog::sink_ptr> sinks {stdout_sink, rotating_sink};
-    auto logger = std::make_shared<spdlog::async_logger>("loggername", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
-    spdlog::register_logger(logger);
-    spdlog::set_default_logger(logger);
-    spdlog::flush_on(spdlog::level::debug);
+//    Log::init("../../../logs/log.log", true);
 
-    spdlog::set_pattern("[%H:%M:%S %z %n %^%L%$ t=%t] %v");
-    spdlog::set_level(spdlog::level::debug);
-    spdlog::debug("Logger initialized");
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback([](int code, const char *ch) { Log::critical("OpenGL error code {} msg {}", code, ch); });
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
     window = new AppWindow(camera, WIDTH, HEIGHT);
     window->setKeyPress(keyPressed);
-    spdlog::info("Initialization complete");
+    Log::info("Initialization complete");
 }
 
 void doTree(std::vector<Body *> *vector, int x, int y, int z) {
@@ -97,7 +79,10 @@ std::vector<Body *> &doCubes() {
     return *vector;
 }
 
-int main() {
+int main(int argc, char **argv) {
+    Args args(argc, argv);
+    Log::init(args.getLogfile(), args.isDebug());
+
     camera.setAspectRatio((float) WIDTH / (float) HEIGHT);
     camera.setPos(glm::vec3(0, 4, 12));
     camera.setYaw(-90);
@@ -117,10 +102,10 @@ int main() {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        spdlog::debug("frame time {}", deltaTime);
+        Log::debug("frame time {}", deltaTime);
 //        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        physicsProcessor.updatePositions(deltaTime, cubes);
+//        physicsProcessor.updatePositions(deltaTime, cubes);
         for (auto cube : cubes) {
             cube->show(camera);
         }
@@ -140,10 +125,6 @@ int main() {
 
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-void error_callback(int error, const char *description) {
-    fprintf(stderr, "Error: %s\n", description);
 }
 
 void keyPressed(GLFWwindow *window, int key) {

@@ -1,4 +1,4 @@
-include_directories(${Tiles_SOURCE_DIR}/tilesge/include)
+include_directories(${Tiles_SOURCE_DIR}/tilesge/include ${Tiles_SOURCE_DIR}/tilesge/inclib)
 
 file(GLOB helloworld_SRC
         "*.h"

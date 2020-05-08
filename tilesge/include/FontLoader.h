@@ -7,10 +7,10 @@
 
 #include <cmrc/cmrc.hpp>
 #include <glad/glad.h>
-#include <spdlog/spdlog.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "Font.h"
+#include "Log.h"
 
 class FontLoader {
 public:

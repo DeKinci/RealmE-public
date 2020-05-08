@@ -9,16 +9,16 @@ CMRC_DECLARE(fonts);
 Font &FontLoader::load(std::string fontName) {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
-        spdlog::error("ERROR::FREETYPE: Could not init FreeType Library");
+        Log::error("ERROR::FREETYPE: Could not init FreeType Library");
 
     auto fs = cmrc::fonts::get_filesystem();
     auto textureResource = fs.open(fontName + ".ttf");
     FT_Face face;
     if (FT_New_Memory_Face(ft, (FT_Byte*) textureResource.begin(), textureResource.size(), 0, &face))
-        spdlog::error("ERROR::FREETYPE: Failed to load font");
+        Log::error("ERROR::FREETYPE: Failed to load font");
 
     if (FT_Set_Pixel_Sizes(face, 48, 48))
-        spdlog::error("ERROR::FREETYPE: Failed to set pixel size");
+        Log::error("ERROR::FREETYPE: Failed to set pixel size");
 
     std::map<char, Symbol> characters;
 
@@ -27,7 +27,7 @@ Font &FontLoader::load(std::string fontName) {
     for (unsigned char c = 33; c < 127; c++)
     {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            spdlog::error("ERROR::FREETYTPE: Failed to load Glyph {} ({})", c, (int) c);
+            Log::error("ERROR::FREETYTPE: Failed to load Glyph {} ({})", c, (int) c);
             continue;
         }
 

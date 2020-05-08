@@ -7,8 +7,8 @@
 
 #include <vector>
 #include <glm/gtx/norm.hpp>
-#include <spdlog/spdlog.h>
 
+#include "Log.h"
 #include "Body.h"
 #include "ThreadPool.h"
 

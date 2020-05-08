@@ -15,10 +15,12 @@ void Body::setPosition(const glm::vec3 &position) {
 
 void Body::setVelocity(const glm::vec3 &velocity) {
     Body::velocity = velocity;
+    updateMovingFlag();
 }
 
 void Body::setAcceleration(const glm::vec3 &acceleration) {
     Body::acceleration = acceleration;
+    updateMovingFlag();
 }
 
 void Body::addPosition(const glm::vec3 &delta) {
@@ -28,10 +30,12 @@ void Body::addPosition(const glm::vec3 &delta) {
 
 void Body::addVelocity(const glm::vec3 &delta) {
     velocity += delta;
+    updateMovingFlag();
 }
 
 void Body::addAcceleration(const glm::vec3 &delta) {
     acceleration += delta;
+    updateMovingFlag();
 }
 
 void Body::show(Camera &camera) {
@@ -48,4 +52,12 @@ const glm::vec3 &Body::getVelocity() const {
 
 const glm::vec3 &Body::getAcceleration() const {
     return acceleration;
+}
+
+bool Body::isMoving() {
+    return moving;
+}
+
+void Body::updateMovingFlag() {
+    moving = glm::length2(acceleration) >= EPSILON_SQ || glm::length2(velocity) >= EPSILON_SQ;
 }

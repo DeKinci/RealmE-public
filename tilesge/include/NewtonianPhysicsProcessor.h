@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <glm/gtx/norm.hpp>
+#include <spdlog/spdlog.h>
 
 #include "Body.h"
 #include "ThreadPool.h"
@@ -19,7 +20,10 @@ public:
     void updatePositions(float deltaTime, std::vector<Body *> &bodies);
 
 private:
-    ThreadPool *threadPool;
+    size_t cores;
+    ThreadPool &threadPool;
+    std::vector<std::future<void>> &queued;
+
     static void updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start, size_t end);
 };
 

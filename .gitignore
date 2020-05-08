@@ -32,5 +32,6 @@
 *.exe
 *.out
 *.app
+logs
 cmake-build-debug
 .idea

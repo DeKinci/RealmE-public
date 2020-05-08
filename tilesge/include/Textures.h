@@ -15,7 +15,8 @@ public:
     }
 
     static Texture &leaf() {
-        static Texture doggoTexture("leaf", GL_LINEAR, GL_TEXTURE0);
+//        static Texture doggoTexture("leaf", GL_LINEAR, GL_TEXTURE0);
+        static Texture doggoTexture("leaf", GL_NEAREST, GL_TEXTURE0);
         return doggoTexture;
     }
 
@@ -25,7 +26,7 @@ public:
     }
 
     static Texture &grass() {
-        static Texture doggoTexture("grass", GL_LINEAR, GL_TEXTURE0);
+        static Texture doggoTexture("grass", GL_NEAREST, GL_TEXTURE0);
         return doggoTexture;
     }
 };

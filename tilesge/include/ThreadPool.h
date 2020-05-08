@@ -14,6 +14,8 @@
 #include <future>
 #include <functional>
 #include <stdexcept>
+#include <iostream>
+#include <spdlog/spdlog.h>
 
 class ThreadPool {
 public:
@@ -45,6 +47,7 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
 
     std::future<return_type> res = task->get_future();
     {
+        spdlog::debug("enqueuing");
         std::unique_lock<std::mutex> lock(queue_mutex);
 
         if (stop)
@@ -53,6 +56,7 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
         tasks.emplace([task]() { (*task)(); });
     }
     condition.notify_one();
+    spdlog::debug("enqueued");
     return res;
 }
 

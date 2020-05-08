@@ -20,11 +20,16 @@
 #include "AppWindow.h"
 #include "ThreadPool.h"
 #include "NewtonianPhysicsProcessor.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/async.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
-ThreadPool pool(7);
+
 Camera camera;
 AppWindow *window;
-NewtonianPhysicsProcessor physicsProcessor(7);
+NewtonianPhysicsProcessor physicsProcessor(30);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -36,12 +41,27 @@ void error_callback(int error, const char *description);
 void keyPressed(GLFWwindow *window, int key);
 
 void init() {
+    spdlog::init_thread_pool(8192, 1);
+    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt >();
+    stdout_sink->set_level(spdlog::level::info);
+    auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("../../../logs/log.log", 1024*1024*10, 3, true);
+    rotating_sink->set_level(spdlog::level::debug);
+    std::vector<spdlog::sink_ptr> sinks {stdout_sink, rotating_sink};
+    auto logger = std::make_shared<spdlog::async_logger>("loggername", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
+    spdlog::register_logger(logger);
+    spdlog::set_default_logger(logger);
+    spdlog::flush_on(spdlog::level::debug);
+
+    spdlog::set_pattern("[%H:%M:%S %z %n %^%L%$ t=%t] %v");
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::debug("Logger initialized");
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
     window = new AppWindow(camera, WIDTH, HEIGHT);
     window->setKeyPress(keyPressed);
+    spdlog::info("Initialization complete");
 }
 
 void doTree(std::vector<Body *> *vector, int x, int y, int z) {
@@ -59,7 +79,7 @@ std::vector<Body *> &doCubes() {
     auto vector = new std::vector<Body *>;
 
     auto dogg = CubeForge::createCube(Textures::doggo(), -5, 4, 1);
-//    dogg->setAcceleration(glm::vec3(0, -10, 0));
+    dogg->setAcceleration(glm::vec3(0, -10, 0));
     vector->push_back(dogg);
 
     for (int i = -10; i < 10; i++)
@@ -72,8 +92,8 @@ std::vector<Body *> &doCubes() {
     doTree(vector, 0, 0, 0);
 //    doTree(vector, 7, 0, 7);
 
-    for (auto bod : *vector)
-        bod->setAcceleration(glm::vec3(0, -10, 0));
+//    for (auto bod : *vector)
+//        bod->setAcceleration(glm::vec3(0, -10, 0));
     return *vector;
 }
 
@@ -88,17 +108,18 @@ int main() {
 
     Font &font = FontLoader::load("arial");
 
-    lastFrame = glfwGetTime();
-    float fps[60] = {0,};
+//    lastFrame = glfwGetTime();
+    const int fpl = 600;
+    float fps[fpl] = {};
     int fpsPointer = 0;
 
     while (!window->readyToClose()) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        spdlog::debug("frame time {}", deltaTime);
 //        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         physicsProcessor.updatePositions(deltaTime, cubes);
         for (auto cube : cubes) {
             cube->show(camera);
@@ -107,12 +128,11 @@ int main() {
         light->show(camera);
 
         fps[fpsPointer] = 1 / deltaTime;
-        fpsPointer = ++fpsPointer % 60;
-        float sumFps = 0;
+        fpsPointer = ++fpsPointer % fpl;
+        double sumFps = 0;
         for (float fp : fps)
             sumFps += fp;
-
-        font.show(*window, std::to_string(lroundf(sumFps / 60)), 10, 10);
+        font.show(*window, std::to_string(lround(sumFps / fpl)), 10, 10);
         window->update();
     }
 

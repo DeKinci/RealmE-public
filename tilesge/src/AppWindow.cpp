@@ -65,7 +65,8 @@ AppWindow::AppWindow(Camera &camera, int width, int height) :
     glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
-    glfwSwapInterval(1);
+//    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {

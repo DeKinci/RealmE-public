@@ -4,46 +4,39 @@
 
 #include "NewtonianPhysicsProcessor.h"
 
-NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) {
-    threadPool = new ThreadPool(cores);
+NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
+        queued{*new std::vector<std::future<void>>()},
+        threadPool{*new ThreadPool(cores)},
+        cores{cores} {
 }
 
 void NewtonianPhysicsProcessor::updatePositions(float deltaTime, std::vector<Body *> &bodies) {
-    int size = bodies.size();
-    int n = 7;
-    int load = size / n;
+    size_t load = bodies.size() / cores;
+    spdlog::debug("load {} size {} batched {}", load, bodies.size(), load * (cores - 1));
 
-    void (*p)(std::vector<Body *> &, float, int, int) = [](std::vector<Body *> &vector, float deltaTime, int start,
-                                                           int end) {
-        NewtonianPhysicsProcessor::updateSomePositions(deltaTime, vector, start, end);
-    };
-
-    std::vector<std::future<void>> queued;
-    for (int i = 0; i < n - 1; i++) {
-        int start = i * load;
-        int end = (i + 1) * load;
-
-        threadPool->enqueue(p, bodies, deltaTime, start, end);
-        queued.emplace_back(threadPool->enqueue(p, bodies, deltaTime, start, end));
+    queued.emplace_back(threadPool.enqueue(updateSomePositions, deltaTime, bodies, (cores - 1) * load, bodies.size()));
+    for (size_t i = 0; i < cores - 1; i++) {
+        queued.emplace_back(threadPool.enqueue(updateSomePositions, deltaTime, bodies, i * load, (i + 1) * load));
     }
-
-    queued.emplace_back(threadPool->enqueue(p, bodies, deltaTime, (n - 1) * load, size));
-
 
     for (auto &f : queued)
         f.get();
+    queued.clear();
+    spdlog::debug("physics processed");
 }
 
 void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start,
                                                     size_t end) {
     for (size_t i = start; i < end; i++) {
-        glm::vec3 acc = bodies[i]->getAcceleration();
-        glm::vec3 vel = bodies[i]->getVelocity();
-        if (glm::length(acc) < EPSILON_SQ && glm::length(vel) < EPSILON_SQ)
+        if (!bodies[i]->isMoving())
             continue;
 
+        auto body = bodies[i];
+        glm::vec3 acc = body->getAcceleration();
+        glm::vec3 vel = body->getVelocity();
+
         glm::vec3 dSpeed = acc * deltaTime;
-        glm::vec3 nextPos = bodies[i]->getPosition() + vel * deltaTime + dSpeed * deltaTime;
+        glm::vec3 nextPos = body->getPosition() + vel * deltaTime + dSpeed * deltaTime;
 
         static float collY = 1;
         static float k = 1.0;
@@ -57,8 +50,8 @@ void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::
             nextPos = glm::vec3(nextPos.x, 2 * collY - nextPos.y, nextPos.z);
         }
 
-        bodies[i]->setPosition(nextPos);
-        bodies[i]->setVelocity(vel + dSpeed);
+        body->setPosition(nextPos);
+        body->setVelocity(vel + dSpeed);
     }
 }
 

@@ -5,7 +5,11 @@
 #ifndef TILESGE_BODY_H
 #define TILESGE_BODY_H
 
+#include <glm/gtx/norm.hpp>
+
 #include "Model.h"
+
+#define EPSILON_SQ 0.001
 
 class Body {
 public:
@@ -31,11 +35,16 @@ public:
 
     void show(Camera &camera);
 
+    bool isMoving();
+
 private:
     Model& model;
     glm::vec3 position{glm::vec3(0, 0, 0)};
     glm::vec3 velocity{glm::vec3(0, 0, 0)};
     glm::vec3 acceleration{glm::vec3(0, 0, 0)};
+    bool moving = false;
+
+    void updateMovingFlag();
 };
 
 

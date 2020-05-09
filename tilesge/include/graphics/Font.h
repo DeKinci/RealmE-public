@@ -5,10 +5,11 @@
 #ifndef TILESGE_FONT_H
 #define TILESGE_FONT_H
 
+#include <glad/glad.h>
 #include <map>
 #include <string>
 
-#include "AppWindow.h"
+#include "Projector.h"
 
 struct Symbol {
     GLuint textureID;
@@ -21,7 +22,7 @@ class Font {
 public:
     explicit Font(std::map<char, Symbol> characters);
 
-    void show(AppWindow &window, const char *text, float x, float y);
+    void show(Projector *projector, const char *text, float x, float y);
 
 private:
     std::map<char, Symbol> Characters;

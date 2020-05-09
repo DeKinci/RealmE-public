@@ -49,13 +49,9 @@ GameApp::GameApp(const Args *args) {
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    camera = new Camera();
-    camera->setAspectRatio((float) args->getWidth() / (float) args->getHeight());
-    camera->setPos(glm::vec3(0, 4, 12));
-    camera->setYaw(-90);
-
-    appWindow = new AppWindow(camera, args->getWidth(), args->getHeight(), args->isDebug());
+    appWindow = new AppWindow(args->getWidth(), args->getHeight(), args->isDebug());
     appWindow->setKeyPress(std::bind(&GameApp::keyPressed, this, std::placeholders::_1));
+    camera = appWindow->getCamera();
     physicsProcessor = new NewtonianPhysicsProcessor(1);
 
     Log::info("Application complete");
@@ -75,6 +71,10 @@ void GameApp::setup() {
     light = CubeForge::createLight(0, 50, 0);
 
     font = &FontLoader::load("arial");
+
+    camera->setAspectRatio((float) args->getWidth() / (float) args->getHeight());
+    camera->setPos(glm::vec3(0, 4, 12));
+    camera->setYaw(-90);
 
 //    lastFrame = glfwGetTime();
 }
@@ -98,7 +98,7 @@ void GameApp::loop() {
     double sumFps = 0;
     for (float fp : fps)
         sumFps += fp;
-    font->show(*appWindow, std::to_string(lround(sumFps / fpl)).c_str(), 10, 10);
+    font->show(appWindow->getProjector(), std::to_string(lround(sumFps / fpl)).c_str(), 10, 10);
     appWindow->update();
 }
 

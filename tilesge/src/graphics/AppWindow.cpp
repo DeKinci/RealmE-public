@@ -7,13 +7,18 @@
 #include <utility>
 #include <glm/gtc/matrix_transform.hpp>
 
-AppWindow::AppWindow(Camera *camera, size_t width, size_t height, bool debug) :
-        camera(camera),
+AppWindow::AppWindow(size_t width, size_t height, bool debug) :
+        camera(new Camera()),
+        projector(new Projector()),
         width(width),
         height(height),
         lastX(width / 2.0),
         lastY(width / 2.0) {
     AppWindow::debug = debug;
+
+    projector->updateDimensions(width, height);
+    camera->setAspectRatio((float) width / (float) height);
+
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -70,9 +75,6 @@ AppWindow::AppWindow(Camera *camera, size_t width, size_t height, bool debug) :
     glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
     glfwSwapInterval(0);
-
-    projector = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-    camera->setAspectRatio((float) width / (float) height);
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {
@@ -118,7 +120,7 @@ void AppWindow::sizeCallback(int newWidth, int newHeight) {
     height = newHeight;
 
     glViewport(0, 0, width, height);
-    projector = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+    projector->updateDimensions(newWidth, newHeight);
     camera->setAspectRatio((float) width / (float) height);
 }
 
@@ -140,10 +142,14 @@ AppWindow::~AppWindow() {
     glfwDestroyWindow(window);
 }
 
-const glm::mat4 &AppWindow::getProjector() const {
+Projector *AppWindow::getProjector() const {
     return projector;
 }
 
 int AppWindow::getKeyState(int key) {
     return glfwGetKey(window, key);
+}
+
+Camera *AppWindow::getCamera() const {
+    return camera;
 }

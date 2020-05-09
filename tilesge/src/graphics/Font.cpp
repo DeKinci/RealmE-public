@@ -7,22 +7,23 @@
 #include "graphics/Shaders.h"
 
 Font::Font(std::map<char, Symbol> characters) : Characters{std::move(characters)} {
+    vao = 0;
+    vbo = 0;
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
-void Font::show(AppWindow &window, const char *text, float x, float y) {
-
+void Font::show(Projector *projector, const char *text, float x, float y) {
     auto shader = Shaders::fontShader();
     shader.use();
-    shader.set("projection", window.getProjector());
+    shader.set("projection", projector->getProjection());
     shader.set("textColor", glm::vec3(0.5, 0.5, 0.5));
 
     glActiveTexture(GL_TEXTURE0);

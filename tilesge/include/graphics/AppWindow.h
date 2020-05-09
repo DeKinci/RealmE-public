@@ -9,10 +9,11 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include "graphics/Camera.h"
+#include "graphics/Projector.h"
 
 class AppWindow {
 public:
-    AppWindow(Camera *camera, size_t width, size_t height, bool debug);
+    AppWindow(size_t width, size_t height, bool debug);
 
     virtual ~AppWindow();
 
@@ -24,7 +25,9 @@ public:
 
     int getKeyState(int key);
 
-    const glm::mat4 &getProjector() const;
+    Camera *getCamera() const;
+
+    Projector *getProjector() const;
 
 private:
     int width;
@@ -35,7 +38,7 @@ private:
     bool firstMouse = true;
     GLFWwindow *window;
     Camera *camera;
-    glm::mat4 projector;
+    Projector *projector;
 
     std::function<void(int)> keyPress;
 
@@ -47,6 +50,5 @@ private:
 
     void sizeCallback(int width, int height);
 };
-
 
 #endif //TILESGE_APPWINDOW_H

@@ -4,7 +4,7 @@
 
 #include "graphics/Font.h"
 
-#include <utility>
+#include "graphics/Shaders.h"
 
 Font::Font(std::map<char, Symbol> characters) : Characters{std::move(characters)} {
     glGenVertexArrays(1, &vao);
@@ -18,18 +18,19 @@ Font::Font(std::map<char, Symbol> characters) : Characters{std::move(characters)
     glBindVertexArray(0);
 }
 
-void Font::show(AppWindow &window, std::string text, float x, float y) {
+void Font::show(AppWindow &window, const char *text, float x, float y) {
 
-    auto shader = Shader::fontShader();
+    auto shader = Shaders::fontShader();
     shader.use();
+    shader.set("projection", window.getProjector());
     shader.set("textColor", glm::vec3(0.5, 0.5, 0.5));
 
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(vao);
 
     float scale = 1;
-    for (auto c : text) {
-        Symbol ch = Characters[c];
+    for (int i = 0; text[i]; i++) {
+        Symbol ch = Characters[text[i]];
 
         float xpos = x + ch.Bearing.x * scale;
         float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;

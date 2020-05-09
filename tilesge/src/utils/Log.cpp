@@ -4,6 +4,11 @@
 
 #include "utils/Log.h"
 
+#include <spdlog/async.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+
 void Log::init(const std::string &file, bool debug) {
     spdlog::init_thread_pool(8192, 1);
     auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

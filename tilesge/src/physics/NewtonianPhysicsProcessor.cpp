@@ -4,6 +4,9 @@
 
 #include "physics/NewtonianPhysicsProcessor.h"
 
+#include "utils/Log.h"
+
+
 NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
         queued{*new std::vector<std::future<void>>()},
         threadPool{*new ThreadPool(cores)},

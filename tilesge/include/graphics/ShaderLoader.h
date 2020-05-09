@@ -6,16 +6,10 @@
 #define TILESGE_SHADERLOADER_H
 
 #include <glad/glad.h>
-#include <cmrc/cmrc.hpp>
-#include <vector>
-#include <map>
-#include <string>
 
 class ShaderLoader {
 public:
     static GLuint loadShaders(const char *vertexShaderResource, const char *fragmentShaderResource);
-private:
-    std::map<std::string, GLuint> map;
 };
 
 

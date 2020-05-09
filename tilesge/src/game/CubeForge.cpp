@@ -3,6 +3,7 @@
 //
 
 #include "game/CubeForge.h"
+#include "graphics/Shaders.h"
 
 
 Body *CubeForge::createCube(Texture &texture, int x, int y, int z) {
@@ -11,7 +12,7 @@ Body *CubeForge::createCube(Texture &texture, int x, int y, int z) {
     attributes[1] = new ShaderAttribute("aTexCoord", 2, 3);
 
     auto mesh = new Mesh(vertices, sizeof(vertices), attributes, 2);
-    auto model = new Model(*mesh, Shader::basicShader());
+    auto model = new Model(*mesh, Shaders::basicShader());
     model->setTexture(texture);
 
     auto body = new Body(*model, glm::vec3(x, y, z));
@@ -23,7 +24,7 @@ Model *CubeForge::createLight(int x, int y, int z) {
     attributes[0] = new ShaderAttribute("aPos", 3, 0);
 
     auto mesh = new Mesh(lightVertices, sizeof(lightVertices), attributes, 1);
-    auto light = new Model(*mesh, Shader::lightShader());
+    auto light = new Model(*mesh, Shaders::lightShader());
     light->setPosition(glm::vec3(x, y, z));
 
     light->shader.set("objectColor", glm::vec3(1.0f, 1.0f, 0.5f));
@@ -32,7 +33,7 @@ Model *CubeForge::createLight(int x, int y, int z) {
     return light;
 }
 
-float CubeForge::vertices[] =  {
+float CubeForge::vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
         0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
@@ -76,7 +77,7 @@ float CubeForge::vertices[] =  {
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 };
 
-float CubeForge::lightVertices[] =  {
+float CubeForge::lightVertices[] = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
         0.5f, 0.5f, -0.5f,

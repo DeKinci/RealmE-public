@@ -5,25 +5,23 @@
 #ifndef TILESGE_FONT_H
 #define TILESGE_FONT_H
 
-#include <glm/glm.hpp>
-#include <glad/glad.h>
 #include <map>
-#include "AppWindow.h"
-#include "Shader.h"
 #include <string>
 
+#include "AppWindow.h"
+
 struct Symbol {
-    unsigned int textureID;  // ID handle of the glyph texture
-    glm::ivec2   Size;       // Size of glyph
-    glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
-    unsigned int Advance;    // Offset to advance to next glyph
+    GLuint textureID;
+    glm::ivec2 Size;
+    glm::ivec2 Bearing;
+    unsigned int Advance;
 };
 
 class Font {
 public:
     explicit Font(std::map<char, Symbol> characters);
 
-    void show(AppWindow &window, std::string text, float x, float y);
+    void show(AppWindow &window, const char *text, float x, float y);
 
 private:
     std::map<char, Symbol> Characters;

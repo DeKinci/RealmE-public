@@ -5,16 +5,19 @@
 #ifndef TILESGE_CAMERA_H
 #define TILESGE_CAMERA_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+
 #include "Direction.h"
 
 class Camera {
 public:
     const float MIN_PITCH = -89.0f, MAX_PITCH = 89.0f;
     const float Z_NEAR = 0.1f, Z_FAR = 100.0f;
-    float minFov = 1.0f, maxFov = 45.0f;
+    const float minFov = 1.0f, maxFov = 45.0f;
+
+    Camera();
 
     void move(Direction direction, float amount);
 
@@ -47,24 +50,24 @@ private:
 
     void updatePitch();
 
-    float fov = 45.0f;
+    float fov = maxFov;
     float aspectRatio = 1.0f;
-    bool fovChanged = true, aspectRatioChanged = true;
+    bool fovChanged = false, aspectRatioChanged = false;
 
     float yaw = 0.0f;
     float pitch = 0.0f;
 
-    double yawCos = cos(glm::radians(yaw));
-    double yawSin = sin(glm::radians(yaw));
-    double pitchCos = cos(glm::radians(pitch));
+    double yawCos;
+    double yawSin;
+    double pitchCos;
 
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 front = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    bool posChanged = true, frontChanged = true, upChanged = true;
+    bool posChanged = false, frontChanged = false, upChanged = false;
 
-    glm::mat4 view;
-    glm::mat4 projection;
+    glm::mat4 view{};
+    glm::mat4 projection{};
 };
 
 #endif //TILESGE_CAMERA_H

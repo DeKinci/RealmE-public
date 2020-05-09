@@ -6,18 +6,17 @@
 #define TILESGE_CUBEFORGE_H
 
 #include "graphics/Model.h"
-#include "graphics/Mesh.h"
-#include "graphics/Textures.h"
-#include "graphics/Shader.h"
 #include "physics/Body.h"
 
 class CubeForge {
 public:
-    static Body* createCube(Texture &texture, int x, int y, int z);
-    static Model* createLight(int x, int y, int z);
+    static Body *createCube(Texture &texture, int x, int y, int z);
+
+    static Model *createLight(int x, int y, int z);
+
 private:
     static float vertices[180];
-    static float lightVertices[180];
+    static float lightVertices[108];
 };
 
 

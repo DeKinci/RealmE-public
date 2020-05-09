@@ -1,9 +1,6 @@
 include_directories(${Tiles_SOURCE_DIR}/tilesge/include ${Tiles_SOURCE_DIR}/tilesge/inclib)
 
-file(GLOB_RECURSE helloworld_SRC
-        "*.h"
-        "*.cpp"
-        )
+file(GLOB_RECURSE helloworld_SRC CONFIGURE_DEPENDS "*.cpp")
 
 include(${Tiles_SOURCE_DIR}/cmakerc/CMakeRC.cmake)
 

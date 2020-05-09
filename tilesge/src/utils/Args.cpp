@@ -3,13 +3,14 @@
 //
 
 #include "utils/Args.h"
+#include "CLI11.hpp"
 
 Args::Args(int argc, char **argv) {
     CLI::App app{"Shitty game engine"};
 
     app.set_help_flag("--help", "Heeeeeeelp");
     app.add_flag("--debug", debug, "Debug mode");
-    app.add_option("-l", logfile , "File to log to");
+    app.add_option("-l", logfile, "File to log to");
     app.add_option("-w", width, "Windows width");
     app.add_option("-h", height, "Windows height");
 

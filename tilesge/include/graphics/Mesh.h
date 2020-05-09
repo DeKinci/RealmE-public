@@ -11,8 +11,8 @@ public:
     size_t verticesSize;
     ShaderAttribute **attributes;
     size_t attributesSize;
-    GLuint attributesLength;
-    GLuint verticesAmount;
+    size_t attributesLength;
+    size_t verticesAmount;
 };
 
 

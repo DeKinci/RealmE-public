@@ -4,17 +4,24 @@
 
 #include "graphics/FontLoader.h"
 
+#include <cmrc/cmrc.hpp>
+#include <glad/glad.h>
+#include <ft2build.h>
+#include <string>
+#include FT_FREETYPE_H
+#include "utils/Log.h"
+
 CMRC_DECLARE(fonts);
 
-Font &FontLoader::load(std::string fontName) {
+Font &FontLoader::load(const char *fontName) {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
         Log::error("ERROR::FREETYPE: Could not init FreeType Library");
 
     auto fs = cmrc::fonts::get_filesystem();
-    auto textureResource = fs.open(fontName + ".ttf");
+    auto textureResource = fs.open(std::string(fontName) + ".ttf");
     FT_Face face;
-    if (FT_New_Memory_Face(ft, (FT_Byte*) textureResource.begin(), textureResource.size(), 0, &face))
+    if (FT_New_Memory_Face(ft, (FT_Byte *) textureResource.begin(), textureResource.size(), 0, &face))
         Log::error("ERROR::FREETYPE: Failed to load font");
 
     if (FT_Set_Pixel_Sizes(face, 48, 48))
@@ -24,8 +31,7 @@ Font &FontLoader::load(std::string fontName) {
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    for (unsigned char c = 33; c < 127; c++)
-    {
+    for (unsigned char c = 33; c < 127; c++) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             Log::error("ERROR::FREETYTPE: Failed to load Glyph {} ({})", c, (int) c);
             continue;

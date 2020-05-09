@@ -4,6 +4,11 @@
 
 #include "GameApp.h"
 
+#include "game/CubeForge.h"
+#include "graphics/Textures.h"
+#include "utils/Log.h"
+
+
 void doTree(std::vector<Body *> *vector, int x, int y, int z) {
     for (int i = 1; i < 6; i++)
         vector->push_back(CubeForge::createCube(Textures::slab(), x, i, z));
@@ -40,7 +45,6 @@ std::vector<Body *> *doCubes() {
 GameApp::GameApp(const Args *args) {
     GameApp::args = args;
     Log::init(args->getLogfile(), args->isDebug());
-
     glfwSetErrorCallback([](int code, const char *ch) { Log::critical("OpenGL error code {} msg {}", code, ch); });
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -94,12 +98,12 @@ void GameApp::loop() {
     double sumFps = 0;
     for (float fp : fps)
         sumFps += fp;
-    font->show(*appWindow, std::to_string(lround(sumFps / fpl)), 10, 10);
+    font->show(*appWindow, std::to_string(lround(sumFps / fpl)).c_str(), 10, 10);
     appWindow->update();
 }
 
 void GameApp::keyPressed(int key) {
-    float cameraSpeed = 7.5f * deltaTime;
+    float cameraSpeed = 75 * deltaTime;
     if (appWindow->getKeyState(GLFW_KEY_W) == GLFW_PRESS)
         camera->move(Direction::FRONT, cameraSpeed);
     if (appWindow->getKeyState(GLFW_KEY_S) == GLFW_PRESS)

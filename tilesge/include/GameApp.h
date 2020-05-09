@@ -5,13 +5,9 @@
 #ifndef TILESGE_GAMEAPP_H
 #define TILESGE_GAMEAPP_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "utils/Args.h"
-#include "utils/Log.h"
 #include "graphics/AppWindow.h"
 #include "graphics/Camera.h"
-#include "game/CubeForge.h"
 #include "graphics/FontLoader.h"
 #include "physics/NewtonianPhysicsProcessor.h"
 

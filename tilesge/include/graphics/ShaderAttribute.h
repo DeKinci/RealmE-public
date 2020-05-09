@@ -5,16 +5,19 @@
 #ifndef TILESGE_SHADERATTRIBUTE_H
 #define TILESGE_SHADERATTRIBUTE_H
 
-#include <glad/glad.h>
-
+#include <cstddef>
 
 class ShaderAttribute {
 public:
-    ShaderAttribute(const GLchar *name, GLuint size, GLuint position) : name{name}, size{size}, position{position} {}
+    ShaderAttribute(const char *name, size_t size, size_t position) :
+            name{name},
+            size{size},
+            position{position} {
+    }
 
-    const GLchar * name;
-    GLuint size;
-    GLuint position;
+    const char *name;
+    size_t size;
+    size_t position;
 };
 
 

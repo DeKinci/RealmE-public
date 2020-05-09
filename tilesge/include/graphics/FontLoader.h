@@ -5,16 +5,11 @@
 #ifndef TILESGE_FONTLOADER_H
 #define TILESGE_FONTLOADER_H
 
-#include <cmrc/cmrc.hpp>
-#include <glad/glad.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "Font.h"
-#include "utils/Log.h"
 
 class FontLoader {
 public:
-    static Font &load(std::string fontName);
+    static Font &load(const char *fontName);
 };
 
 

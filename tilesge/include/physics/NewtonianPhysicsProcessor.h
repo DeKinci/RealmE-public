@@ -8,7 +8,6 @@
 #include <vector>
 #include <glm/gtx/norm.hpp>
 
-#include "utils/Log.h"
 #include "Body.h"
 #include "utils/ThreadPool.h"
 
@@ -17,6 +16,7 @@
 class NewtonianPhysicsProcessor {
 public:
     explicit NewtonianPhysicsProcessor(size_t cores);
+
     void updatePositions(float deltaTime, std::vector<Body *> &bodies);
 
 private:

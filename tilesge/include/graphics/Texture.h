@@ -2,13 +2,12 @@
 #define TILESGE_TEXTURE_H
 
 #include <glad/glad.h>
-#include <graphics/TextureLoader.h>
 
 class Texture {
 public:
     GLuint ID;
 
-    Texture(const GLchar *name, GLuint magFilter, GLuint activeTexture = GL_TEXTURE0);
+    Texture(const char *name, GLuint magFilter, GLuint activeTexture = GL_TEXTURE0);
     void bind() const;
 };
 

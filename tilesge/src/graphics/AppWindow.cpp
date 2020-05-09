@@ -5,6 +5,7 @@
 #include "graphics/AppWindow.h"
 
 #include <utility>
+#include <glm/gtc/matrix_transform.hpp>
 
 AppWindow::AppWindow(Camera *camera, size_t width, size_t height, bool debug) :
         camera(camera),
@@ -68,8 +69,10 @@ AppWindow::AppWindow(Camera *camera, size_t width, size_t height, bool debug) :
     glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
-//    glfwSwapInterval(1);
     glfwSwapInterval(0);
+
+    projector = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+    camera->setAspectRatio((float) width / (float) height);
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {

@@ -8,8 +8,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <functional>
-#include <cstdlib>
-#include <glm/glm.hpp>
 #include "graphics/Camera.h"
 
 class AppWindow {
@@ -39,7 +37,6 @@ private:
     Camera *camera;
     glm::mat4 projector;
 
-//    void (*keyPress)(GLFWwindow *, int);
     std::function<void(int)> keyPress;
 
     void keyCallback(int key, int scancode, int action, int mods);

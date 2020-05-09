@@ -3,6 +3,16 @@
 //
 
 #include "graphics/Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
+
+Camera::Camera() {
+    yawCos = cos(glm::radians(yaw));
+    yawSin = sin(glm::radians(yaw));
+    pitchCos = cos(glm::radians(pitch));
+
+    view = glm::lookAt(pos, pos + front, up);
+    projection = glm::perspective(glm::radians(fov), aspectRatio, Z_NEAR, Z_FAR);
+}
 
 void Camera::move(Direction direction, float amount) {
     switch (direction) {

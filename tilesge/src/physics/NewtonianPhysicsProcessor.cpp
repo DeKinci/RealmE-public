@@ -17,10 +17,12 @@ NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
 void NewtonianPhysicsProcessor::updatePositions(float deltaTime, std::vector<Body *> &bodies) {
     size_t load = bodies.size() / cores;
     Log::debug("load {} size {} batched {}", load, bodies.size(), load * (cores - 1));
+    updatePhysSpeed(deltaTime);
+    float simulationDeltaTime = deltaTime * currentPhysSpeed;
 
-    queued.emplace_back(threadPool.enqueue(updateSomePositions, deltaTime, bodies, (cores - 1) * load, bodies.size()));
+    queued.emplace_back(threadPool.enqueue(updateSomePositions, simulationDeltaTime, bodies, (cores - 1) * load, bodies.size()));
     for (size_t i = 0; i < cores - 1; i++) {
-        queued.emplace_back(threadPool.enqueue(updateSomePositions, deltaTime, bodies, i * load, (i + 1) * load));
+        queued.emplace_back(threadPool.enqueue(updateSomePositions, simulationDeltaTime, bodies, i * load, (i + 1) * load));
     }
 
     for (auto &f : queued)
@@ -49,5 +51,21 @@ void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::
             }
         }
     }
+}
+
+void NewtonianPhysicsProcessor::updatePhysSpeed(float deltaTime) {
+    if (abs(targetPhysPeed - currentPhysSpeed) > 0.001) {
+        float delta = (targetPhysPeed - initPhysSpeed) * deltaTime * physAcceleration;
+        currentPhysSpeed += delta;
+        if (abs(targetPhysPeed - currentPhysSpeed) < delta)
+            currentPhysSpeed = targetPhysPeed;
+    }
+}
+
+void NewtonianPhysicsProcessor::setPhysSpeed(float newPhysSpeed, bool animate) {
+    targetPhysPeed = newPhysSpeed;
+    initPhysSpeed = currentPhysSpeed;
+    if (!animate)
+        currentPhysSpeed = newPhysSpeed;
 }
 

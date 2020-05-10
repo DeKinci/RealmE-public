@@ -11,25 +11,25 @@
 
 void doTree(std::vector<Body *> *vector, int x, int y, int z) {
     for (int i = 1; i < 6; i++)
-        vector->push_back(CubeForge::createCube(Textures::slab(), x, i, z));
+        vector->push_back(CubeForge::createCube(Textures::slab(), x, i, z, 1));
 
     for (int k = 6; k < 10; k++)
         for (int i = -5; i < 5; i++)
             for (int j = -5; j < 5; j++)
                 if (sqrt(i * i + j * j) < 10 - k)
-                    vector->push_back(CubeForge::createCube(Textures::leaf(), x + i, k + y, z + j));
+                    vector->push_back(CubeForge::createCube(Textures::leaf(), x + i, k + y, z + j, 1));
 }
 
 std::vector<Body *> *doCubes() {
     auto vector = new std::vector<Body *>;
 
-    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1);
+    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1, 1);
     dogg->setAcceleration(glm::vec3(0, -10, 0));
     vector->push_back(dogg);
 
     for (int i = -10; i < 10; i++)
         for (int j = -10; j < 10; j++)
-            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j));
+            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j, 1));
 
 //    for (int i = -10; i < 10; i++)
 //        for (int j = -10; j < 10; j++)
@@ -73,8 +73,9 @@ void GameApp::setup() {
     font = &FontLoader::load("arial");
 
     camera->setAspectRatio((float) args->getWidth() / (float) args->getHeight());
-    camera->setPos(glm::vec3(0, 4, 12));
-    camera->setYaw(-90);
+    camera->setPos(glm::vec3(18, 8, 18));
+    camera->setYaw(-135);
+    camera->setPitch(-15);
 
 //    lastFrame = glfwGetTime();
 }
@@ -86,6 +87,7 @@ void GameApp::loop() {
     Log::debug("frame time {}", deltaTime);
 //        glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     physicsProcessor->updatePositions(deltaTime, *cubes);
     for (auto cube : *cubes) {
         cube->show(*camera);
@@ -104,6 +106,16 @@ void GameApp::loop() {
 
 void GameApp::keyPressed(int key) {
     float cameraSpeed = 75 * deltaTime;
+    if (appWindow->getKeyState(GLFW_KEY_4) == GLFW_PRESS)
+        physicsProcessor->setPhysSpeed(0, false);
+    if (appWindow->getKeyState(GLFW_KEY_5) == GLFW_PRESS)
+        physicsProcessor->setPhysSpeed(1, true);
+    if (appWindow->getKeyState(GLFW_KEY_6) == GLFW_PRESS)
+        physicsProcessor->setPhysSpeed(10, true);
+    if (appWindow->getKeyState(GLFW_KEY_7) == GLFW_PRESS)
+        physicsProcessor->setPhysSpeed(100, true);
+    if (appWindow->getKeyState(GLFW_KEY_8) == GLFW_PRESS)
+        physicsProcessor->setPhysSpeed(1000, true);
     if (appWindow->getKeyState(GLFW_KEY_W) == GLFW_PRESS)
         camera->move(Direction::FRONT, cameraSpeed);
     if (appWindow->getKeyState(GLFW_KEY_S) == GLFW_PRESS)

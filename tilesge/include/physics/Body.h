@@ -14,7 +14,7 @@
 
 class Body {
 public:
-    Body(Model &model, const glm::vec3 &position);
+    Body(Model &model, const glm::vec3 &position, int mass);
 
     void setPosition(const glm::vec3 &position);
 

@@ -14,7 +14,7 @@
 class Camera {
 public:
     const float MIN_PITCH = -89.0f, MAX_PITCH = 89.0f;
-    const float Z_NEAR = 0.1f, Z_FAR = 100.0f;
+    const float Z_NEAR = 0.1f, Z_FAR = 500000.0f;
     const float minFov = 1.0f, maxFov = 45.0f;
 
     Camera();

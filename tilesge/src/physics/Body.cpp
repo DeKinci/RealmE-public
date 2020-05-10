@@ -4,8 +4,9 @@
 
 #include "physics/Body.h"
 
-Body::Body(Model &model, const glm::vec3 &position) : model{model} {
+Body::Body(Model &model, const glm::vec3 &position, int mass) : model{model} {
     setPosition(position);
+    Body::mass = mass;
 }
 
 void Body::setPosition(const glm::vec3 &position) {

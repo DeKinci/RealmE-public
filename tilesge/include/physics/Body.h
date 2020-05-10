@@ -8,6 +8,7 @@
 #include <glm/gtx/norm.hpp>
 
 #include "graphics/Model.h"
+#include "AABB.h"
 
 #define EPSILON_SQ 0.001
 
@@ -33,18 +34,26 @@ public:
 
     const glm::vec3 &getAcceleration() const;
 
+    AABB *getAabb() const;
+
     void show(Camera &camera);
 
     bool isMoving();
 
+    float restitution = 1;
+    float mass = 1;
+
 private:
     Model& model;
+    AABB *aabb = nullptr;
     glm::vec3 position{glm::vec3(0, 0, 0)};
     glm::vec3 velocity{glm::vec3(0, 0, 0)};
     glm::vec3 acceleration{glm::vec3(0, 0, 0)};
     bool moving = false;
 
     void updateMovingFlag();
+
+    void computeAABB();
 };
 
 

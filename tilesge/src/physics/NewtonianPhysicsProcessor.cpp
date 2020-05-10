@@ -5,6 +5,7 @@
 #include "physics/NewtonianPhysicsProcessor.h"
 
 #include "utils/Log.h"
+#include "physics/CollisionService.h"
 
 
 NewtonianPhysicsProcessor::NewtonianPhysicsProcessor(size_t cores) :
@@ -30,31 +31,23 @@ void NewtonianPhysicsProcessor::updatePositions(float deltaTime, std::vector<Bod
 
 void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start,
                                                     size_t end) {
-    for (size_t i = start; i < end; i++) {
-        if (!bodies[i]->isMoving())
-            continue;
-
-        auto body = bodies[i];
-        glm::vec3 acc = body->getAcceleration();
-        glm::vec3 vel = body->getVelocity();
+    for (size_t i = 0; i < bodies.size(); i++) {
+        auto first = bodies[i];
+        glm::vec3 acc = first->getAcceleration();
+        glm::vec3 vel = first->getVelocity();
 
         glm::vec3 dSpeed = acc * deltaTime;
-        glm::vec3 nextPos = body->getPosition() + vel * deltaTime + dSpeed * deltaTime;
+        glm::vec3 nextPos = first->getPosition() + vel * deltaTime + dSpeed * deltaTime;
 
-        static float collY = 1;
-        static float k = 1.0;
-        if (nextPos.y <= collY) {
-            float fix = (1 - nextPos.y) * acc.y / vel.y;
-            if (abs(vel.y) < abs(fix)) {
-                fix = -vel.y;
+        first->setPosition(nextPos);
+        first->setVelocity(vel + dSpeed);
+
+        for (size_t j = 0; j < i; j++) {
+            auto second = bodies[j];
+            if (CollisionService::checkCollision(*first->getAabb(), *second->getAabb())) {
+                CollisionService::resolveCollision(*first, *second);
             }
-
-            vel = glm::vec3(vel.x, -(vel.y + fix) * k, vel.z);
-            nextPos = glm::vec3(nextPos.x, 2 * collY - nextPos.y, nextPos.z);
         }
-
-        body->setPosition(nextPos);
-        body->setVelocity(vel + dSpeed);
     }
 }
 

@@ -23,7 +23,7 @@ void doTree(std::vector<Body *> *vector, int x, int y, int z) {
 std::vector<Body *> *doCubes() {
     auto vector = new std::vector<Body *>;
 
-    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 4, 1);
+    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1);
     dogg->setAcceleration(glm::vec3(0, -10, 0));
     vector->push_back(dogg);
 

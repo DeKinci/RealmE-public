@@ -37,7 +37,7 @@ void Model::show(Camera &camera) {
     glBindVertexArray(id);
     shader.use();
     if (text) {
-        texture->bind();
+        texture->bind(); //TODO reuse vbo for same objects
     }
     shader.set("projection", camera.getProjection());
     shader.set("view", camera.getView());

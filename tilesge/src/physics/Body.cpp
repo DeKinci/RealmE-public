@@ -4,9 +4,10 @@
 
 #include "physics/Body.h"
 
-Body::Body(Model &model, const glm::vec3 &position, int mass) : model{model} {
+Body::Body(Model &model, const glm::vec3 &position, float mass) : model{model} {
     setPosition(position);
     Body::mass = mass;
+    invMass = mass == 0 ? 0 : 1.0f / mass;
 }
 
 void Body::setPosition(const glm::vec3 &position) {
@@ -23,6 +24,10 @@ void Body::setVelocity(const glm::vec3 &velocity) {
 void Body::setAcceleration(const glm::vec3 &acceleration) {
     Body::acceleration = acceleration;
     updateMovingFlag();
+}
+
+void Body::setPermAcceleration(const glm::vec3 &permAcceleration) {
+    Body::permAcceleration = permAcceleration;
 }
 
 void Body::addPosition(const glm::vec3 &delta) {
@@ -53,12 +58,20 @@ const glm::vec3 &Body::getAcceleration() const {
     return acceleration;
 }
 
-bool Body::isMoving() {
+const glm::vec3 &Body::getPermAcceleration() const {
+    return permAcceleration;
+}
+
+bool Body::isMoving() const {
     return moving;
 }
 
 void Body::updateMovingFlag() {
     moving = glm::length2(acceleration) >= EPSILON_SQ || glm::length2(velocity) >= EPSILON_SQ;
+    if(!moving) {
+        velocity = glm::vec3();
+        acceleration = glm::vec3();
+    }
 }
 
 void Body::computeAABB() {

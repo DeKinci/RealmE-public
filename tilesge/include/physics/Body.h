@@ -10,11 +10,12 @@
 #include "graphics/Model.h"
 #include "AABB.h"
 
-#define EPSILON_SQ 0.001
+#define EPSILON_SQ 0.0000001f
+#define INF_MASS 0
 
 class Body {
 public:
-    Body(Model &model, const glm::vec3 &position, int mass);
+    Body(Model &model, const glm::vec3 &position, float mass);
 
     void setPosition(const glm::vec3 &position);
 
@@ -38,10 +39,15 @@ public:
 
     void show(Camera &camera);
 
-    bool isMoving();
+    bool isMoving() const;
+
+    void setPermAcceleration(const glm::vec3 &permAcceleration);
+
+    const glm::vec3 &getPermAcceleration() const;
 
     float restitution = 1;
     float mass = 1;
+    float invMass;
 
 private:
     Model& model;
@@ -49,6 +55,7 @@ private:
     glm::vec3 position{glm::vec3(0, 0, 0)};
     glm::vec3 velocity{glm::vec3(0, 0, 0)};
     glm::vec3 acceleration{glm::vec3(0, 0, 0)};
+    glm::vec3 permAcceleration{glm::vec3(0, 0, 0)};
     bool moving = false;
 
     void updateMovingFlag();

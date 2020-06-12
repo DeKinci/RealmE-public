@@ -28,6 +28,8 @@ private:
     static const int fpl = 600;
     float fps[fpl] = {};
     int fpsPointer = 0;
+    Direction direction = Direction::FRONT;
+    float speed = 0;
 
     float deltaTime = 0;
     float lastFrame = 0;

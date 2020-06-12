@@ -6,7 +6,7 @@
 #include "graphics/Shaders.h"
 
 
-Body *CubeForge::createCube(Texture &texture, int x, int y, int z, int mass) {
+Body *CubeForge::createCube(Texture &texture, int x, int y, int z, float mass) {
     auto attributes = new ShaderAttribute *[2];
     attributes[0] = new ShaderAttribute("aPos", 3, 0);
     attributes[1] = new ShaderAttribute("aTexCoord", 2, 3);

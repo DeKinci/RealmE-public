@@ -10,7 +10,7 @@
 
 class CubeForge {
 public:
-    static Body *createCube(Texture &texture, int x, int y, int z, int mass);
+    static Body *createCube(Texture &texture, int x, int y, int z, float mass);
 
     static Model *createLight(int x, int y, int z);
 

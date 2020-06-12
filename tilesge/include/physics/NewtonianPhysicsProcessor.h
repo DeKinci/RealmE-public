@@ -11,8 +11,6 @@
 #include "Body.h"
 #include "utils/ThreadPool.h"
 
-#define EPSILON_SQ 0.001
-
 class NewtonianPhysicsProcessor {
 public:
     explicit NewtonianPhysicsProcessor(size_t cores);

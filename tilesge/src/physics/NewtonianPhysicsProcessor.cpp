@@ -69,6 +69,8 @@ void NewtonianPhysicsProcessor::updateSomePositions(float deltaTime, const std::
 
         Log::info("Acceleration {} velocity {} position {}", acc.y, first->getVelocity().y, nextPos.y);
     }
+
+    delete[] collided;
 }
 
 void NewtonianPhysicsProcessor::updatePhysSpeed(float deltaTime) {

@@ -4,6 +4,8 @@
 
 #include "GameApp.h"
 
+#include <cmath>
+
 #include "game/CubeForge.h"
 #include "graphics/Textures.h"
 #include "utils/Log.h"
@@ -23,22 +25,22 @@ void doTree(std::vector<Body *> *vector, int x, int y, int z) {
 std::vector<Body *> *doCubes() {
     auto vector = new std::vector<Body *>;
 
-    auto dogg = CubeForge::createCube(Textures::doggo(), 0, 4, 0, 1);
-//    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1, 1);
+//    auto dogg = CubeForge::createCube(Textures::doggo(), 0, 4, 0, 1);
+    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1, 1);
     dogg->setPermAcceleration(glm::vec3(0, -10, 0));
-    dogg->restitution = 1.0f;
+    dogg->restitution = .8f;
     vector->push_back(dogg);
+//    vector->push_back(CubeForge::createCube(Textures::grass(), 0, 0, 0, 100));
 
-//    for (int i = -10; i < 10; i++)
-//        for (int j = -10; j < 10; j++)
-//            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j, 10));
-    vector->push_back(CubeForge::createCube(Textures::grass(), 0, 0, 0, INF_MASS));
+    for (int i = -10; i < 10; i++)
+        for (int j = -10; j < 10; j++)
+            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j, 10));
 
 //    for (int i = -10; i < 10; i++)
 //        for (int j = -10; j < 10; j++)
 //            doTree(vector, i * 10, 0, j * 10);
-//    doTree(vector, 0, 0, 0);
-//    doTree(vector, 7, 0, 7);
+    doTree(vector, 0, 0, 0);
+    doTree(vector, 7, 0, 7);
 
 //    for (auto bod : *vector)
 //        bod->setAcceleration(glm::vec3(0, -10, 0));
@@ -101,12 +103,8 @@ void GameApp::loop() {
 
 //    light->show(*camera);
 
-    fps[fpsPointer] = 1 / deltaTime;
-    fpsPointer = ++fpsPointer % fpl;
-    double sumFps = 0;
-    for (float fp : fps)
-        sumFps += fp;
-    font->show(appWindow->getProjector(), std::to_string(lround(sumFps / fpl)).c_str(), 10, 10);
+    fps.registerFps(deltaTime);
+    font->show(appWindow->getProjector(), std::to_string(std::lround(fps.getFps())).c_str(), 10, 10);
     appWindow->update();
 }
 

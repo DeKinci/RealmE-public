@@ -44,16 +44,15 @@ void CollisionService::resolveCollision(Body &a, Body &b, float deltaTime) {
     }
 
     glm::vec3 rv = b.getVelocity() - a.getVelocity();
-    // stuck if stuckable
+    // stuck if slow
     if (abs(glm::length(rv * deltaTime)) < STUCK_DEPTH) {
         glm::vec3 nSpeed = (a.getVelocity() * b.invMass + b.getVelocity() * a.invMass) / (a.invMass + b.invMass);
         a.setVelocity(nSpeed);
         b.setVelocity(nSpeed);
-        Log::info("Stucked to {}", nSpeed.y);
         return;
     }
 
-    // jump if not stucked
+    // jump if not stuck
     float velAlongNormal = glm::dot(rv, normal);
     if (velAlongNormal <= 0) {
         float e = a.restitution * b.restitution;

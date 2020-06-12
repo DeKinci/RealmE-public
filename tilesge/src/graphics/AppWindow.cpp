@@ -74,8 +74,7 @@ AppWindow::AppWindow(size_t width, size_t height, bool debug) :
     glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
-//    glfwSwapInterval(0);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {

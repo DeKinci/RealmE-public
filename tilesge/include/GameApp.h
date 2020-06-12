@@ -10,6 +10,7 @@
 #include "graphics/Camera.h"
 #include "graphics/FontLoader.h"
 #include "physics/NewtonianPhysicsProcessor.h"
+#include "game/FpsCounter.h"
 
 class GameApp {
 public:
@@ -25,9 +26,9 @@ private:
     std::vector<Body *> *cubes;
     Model *light;
     Font *font;
-    static const int fpl = 600;
-    float fps[fpl] = {};
-    int fpsPointer = 0;
+
+    FpsCounter fps = FpsCounter();
+
     Direction direction = Direction::FRONT;
     float speed = 0;
 

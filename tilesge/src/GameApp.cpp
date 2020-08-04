@@ -25,25 +25,26 @@ void doTree(std::vector<Body *> *vector, int x, int y, int z) {
 std::vector<Body *> *doCubes() {
     auto vector = new std::vector<Body *>;
 
-    auto dogg = CubeForge::createCube(Textures::doggo(), 0, 4, 0, 1);
-//    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1, 1);
+//    auto dogg = CubeForge::createCube(Textures::doggo(), 0, 4, 0, 1);
+    auto dogg = CubeForge::createCube(Textures::doggo(), -5, 10, 1, 1);
     dogg->setPermAcceleration(glm::vec3(0, -10, 0));
     dogg->restitution = .8f;
     vector->push_back(dogg);
-    vector->push_back(CubeForge::createCube(Textures::grass(), 0, 0, 0, 100));
-
-//    for (int i = -10; i < 10; i++)
-//        for (int j = -10; j < 10; j++)
-//            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j, 10));
+//    vector->push_back(CubeForge::createCube(Textures::grass(), 0, 0, 0, 100));
 
 //    for (int i = -10; i < 10; i++)
 //        for (int j = -10; j < 10; j++)
 //            doTree(vector, i * 10, 0, j * 10);
-//    doTree(vector, 0, 0, 0);
-//    doTree(vector, 7, 0, 7);
+    doTree(vector, 0, 1, 0);
+    doTree(vector, 7, 1, 7);
 
-//    for (auto bod : *vector)
-//        bod->setAcceleration(glm::vec3(0, -10, 0));
+    for (auto bod : *vector)
+        bod->setPermAcceleration(glm::vec3(0, -10, 0));
+
+    for (int i = -10; i < 10; i++)
+        for (int j = -10; j < 10; j++)
+            vector->push_back(CubeForge::createCube(Textures::grass(), i, 0, j, 100));
+
     return vector;
 }
 

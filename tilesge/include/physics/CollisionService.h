@@ -14,7 +14,7 @@
 class CollisionService {
 public:
     static bool checkCollision(AABB &first, AABB &second);
-    static void resolveCollision(Body &a, Body &b, float deltaTime);
+    static void resolveOneSided(const Body &impactor, Body &impactee, const float deltaTime);
 
 private:
     static float calculatePenetration(AABB &first, AABB &second);

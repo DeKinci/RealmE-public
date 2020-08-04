@@ -15,51 +15,49 @@ bool CollisionService::checkCollision(AABB &first, AABB &second) {
            (first.min.z < second.max.z && first.max.z > second.min.z);
 }
 
-void CollisionService::resolveCollision(Body &a, Body &b, float deltaTime) {
+void CollisionService::resolveOneSided(const Body &impactor, Body &impactee, const float deltaTime) {
     // fix penetration
-    glm::vec3 normal = glm::normalize(b.getPosition() - a.getPosition());
-    float penetration = CollisionService::calculatePenetration(*a.getAabb(), *b.getAabb());
+    glm::vec3 normal = glm::normalize(impactee.getPosition() - impactor.getPosition());
+    float penetration = CollisionService::calculatePenetration(*impactor.getAabb(), *impactee.getAabb());
 
     if (abs(penetration) > STUCK_DEPTH) {
         penetration -= std::copysign(STUCK_DEPTH, penetration);
-        glm::vec3 correction = penetration * normal * ((PUSH_PERCENT * deltaTime) / (a.invMass + b.invMass));
-        a.addPosition(-correction * a.invMass);
-        b.addPosition(correction * b.invMass);
+        glm::vec3 correction =
+                penetration * normal * ((PUSH_PERCENT * deltaTime) / (impactor.invMass + impactee.invMass));
+        impactee.addPosition(correction * impactee.invMass);
     }
 
     // finish if both not moving
-    if (!a.isMoving() && !b.isMoving()) {
+    if (!impactor.isMoving() && !impactee.isMoving()) {
         return;
     }
 
     // update acceleration
-    float summMass = a.invMass + b.invMass;
-    glm::vec3 acc = (a.getAcceleration() * b.invMass + b.getAcceleration() * a.invMass) / summMass;
-    a.setAcceleration(acc);
-    b.setAcceleration(acc);
+    float summMass = impactor.invMass + impactee.invMass;
+    glm::vec3 acc =
+            (impactor.getAcceleration() * impactee.invMass + impactee.getAcceleration() * impactor.invMass) / summMass;
+    impactee.setAcceleration(acc);
 
     // finish if both not moving
-    if (!a.isMoving() && !b.isMoving()) {
+    if (!impactor.isMoving() && !impactee.isMoving()) {
         return;
     }
 
-    glm::vec3 rv = b.getVelocity() - a.getVelocity();
+    glm::vec3 rv = impactee.getVelocity() - impactor.getVelocity();
     // stuck if slow
     if (abs(glm::length(rv * deltaTime)) < STUCK_DEPTH) {
-        glm::vec3 nSpeed = (a.getVelocity() * b.invMass + b.getVelocity() * a.invMass) / (a.invMass + b.invMass);
-        a.setVelocity(nSpeed);
-        b.setVelocity(nSpeed);
+        glm::vec3 nSpeed = (impactor.getVelocity() * impactee.invMass + impactee.getVelocity() * impactor.invMass) /
+                           (impactor.invMass + impactee.invMass);
+        impactee.setVelocity(nSpeed);
         return;
     }
 
     // jump if not stuck
     float velAlongNormal = glm::dot(rv, normal);
     if (velAlongNormal <= 0) {
-        float e = a.restitution * b.restitution;
+        float e = impactor.restitution * impactee.restitution;
         glm::vec3 impulse = -(1 + e) * velAlongNormal / summMass * normal;
-
-        a.addVelocity(-impulse * a.invMass);
-        b.addVelocity(impulse * b.invMass);
+        impactee.addVelocity(impulse * impactee.invMass);
     }
 }
 

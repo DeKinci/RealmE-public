@@ -15,7 +15,7 @@ Body *CubeForge::createCube(Texture &texture, int x, int y, int z, float mass) {
     auto model = new Model(*mesh, Shaders::basicShader());
     model->setTexture(texture);
 
-    auto body = new Body(*model, glm::vec3(x, y, z), mass);
+    auto body = new Body(model, glm::vec3(x, y, z), mass);
     return body;
 }
 

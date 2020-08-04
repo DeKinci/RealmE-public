@@ -15,7 +15,11 @@
 
 class Body {
 public:
-    Body(Model &model, const glm::vec3 &position, float mass);
+    Body(Model *model, const glm::vec3 &position, float mass);
+    explicit Body(const Body *body);
+    ~Body();
+
+    void merge(const Body* body);
 
     void setPosition(const glm::vec3 &position);
 
@@ -50,7 +54,7 @@ public:
     float invMass;
 
 private:
-    Model& model;
+    Model *model;
     AABB *aabb = nullptr;
     glm::vec3 position{glm::vec3(0, 0, 0)};
     glm::vec3 velocity{glm::vec3(0, 0, 0)};

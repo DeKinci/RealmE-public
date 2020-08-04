@@ -10,12 +10,13 @@
 
 #include "Body.h"
 #include "utils/ThreadPool.h"
+#include "engine/GlobalState.h"
 
 class NewtonianPhysicsProcessor {
 public:
     explicit NewtonianPhysicsProcessor(size_t cores);
 
-    void updatePositions(float deltaTime, std::vector<Body *> &bodies);
+    void updatePositions(float deltaTime, GlobalState *state);
 
     void setPhysSpeed(float newPhysSpeed, bool animate);
 
@@ -30,7 +31,7 @@ private:
 
     void updatePhysSpeed(float deltaTime);
 
-    static void updateSomePositions(float deltaTime, const std::vector<Body *> &bodies, size_t start, size_t end);
+    static void mapBody(float simDeltaTime, const BufferState &bs, size_t bodyIndex, Body *newBody);
 };
 
 

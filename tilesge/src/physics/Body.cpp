@@ -4,15 +4,41 @@
 
 #include "physics/Body.h"
 
-Body::Body(Model &model, const glm::vec3 &position, float mass) : model{model} {
+Body::Body(Model *model, const glm::vec3 &position, float mass) {
+    Body::model = model;
     setPosition(position);
     Body::mass = mass;
     invMass = mass == 0 ? 0 : 1.0f / mass;
 }
 
+Body::Body(const Body *body){
+    Body::model = body->model;
+    Body::restitution = body->restitution;
+    Body::mass = body->mass;
+    Body::invMass = body->invMass;
+    Body::position = body->position;
+    Body::velocity = body->velocity;
+    Body::acceleration = body->acceleration;
+    Body::permAcceleration = body->permAcceleration;
+    Body::moving = body->moving;
+    computeAABB();
+}
+
+void Body::merge(const Body *body) {
+    Body::restitution = body->restitution;
+    Body::mass = body->mass;
+    Body::invMass = body->invMass;
+    Body::position = body->position;
+    Body::velocity = body->velocity;
+    Body::acceleration = body->acceleration;
+    Body::permAcceleration = body->permAcceleration;
+    Body::moving = body->moving;
+    computeAABB();
+}
+
 void Body::setPosition(const glm::vec3 &position) {
     Body::position = position;
-    model.setPosition(position);
+    model->setPosition(position);
     computeAABB();
 }
 
@@ -43,7 +69,7 @@ void Body::addAcceleration(const glm::vec3 &delta) {
 }
 
 void Body::show(Camera &camera) {
-    model.show(camera);
+    model->show(camera);
 }
 
 const glm::vec3 &Body::getPosition() const {
@@ -68,7 +94,7 @@ bool Body::isMoving() const {
 
 void Body::updateMovingFlag() {
     moving = glm::length2(acceleration) >= EPSILON_SQ || glm::length2(velocity) >= EPSILON_SQ;
-    if(!moving) {
+    if (!moving) {
         velocity = glm::vec3();
         acceleration = glm::vec3();
     }
@@ -81,4 +107,8 @@ void Body::computeAABB() {
 
 AABB *Body::getAabb() const {
     return aabb;
+}
+
+Body::~Body() {
+    delete aabb;
 }

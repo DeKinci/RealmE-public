@@ -23,7 +23,7 @@ private:
     AppWindow *appWindow;
     Camera *camera;
     NewtonianPhysicsProcessor *physicsProcessor;
-    std::vector<Body *> *cubes;
+    GlobalState *gs;
     Model *light;
     Font *font;
 

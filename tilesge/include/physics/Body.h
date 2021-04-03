@@ -8,6 +8,7 @@
 #include <glm/gtx/norm.hpp>
 
 #include "graphics/Model.h"
+#include "graphics/GraphicsObject.h"
 #include "AABB.h"
 
 #define EPSILON_SQ 0.0000001f
@@ -15,7 +16,7 @@
 
 class Body {
 public:
-    Body(Model *model, const glm::vec3 &position, float mass);
+    Body(GraphicsObject *go, const glm::vec3 &position, float mass);
     explicit Body(const Body *body);
     ~Body();
 
@@ -53,13 +54,18 @@ public:
     float mass = 1;
     float invMass;
 
+    const glm::mat4 &getTransormation() const;
+
 private:
-    Model *model;
+    GraphicsObject* go;
     AABB *aabb = nullptr;
     glm::vec3 position{glm::vec3(0, 0, 0)};
     glm::vec3 velocity{glm::vec3(0, 0, 0)};
     glm::vec3 acceleration{glm::vec3(0, 0, 0)};
     glm::vec3 permAcceleration{glm::vec3(0, 0, 0)};
+
+    glm::mat4 transormation;
+
     bool moving = false;
 
     void updateMovingFlag();

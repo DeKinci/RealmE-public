@@ -26,6 +26,9 @@ public:
     void set(const GLchar *name, glm::vec3 vec3) const;
 
     void set(const GLchar *name, glm::mat4) const;
+
+private:
+    static GLuint lastUsedGLId;
 };
 
 

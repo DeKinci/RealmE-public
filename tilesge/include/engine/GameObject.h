@@ -7,20 +7,24 @@
 
 #include "physics/Body.h"
 #include "graphics/Model.h"
+#include "graphics/Texture.h"
+#include "graphics/GraphicsObject.h"
 
 class GameObject {
 public:
-    GameObject(Body *body, Model *model);
-
-    void setBody(Body *body);
+    GameObject(Body *body, Shader* shader, Model *model, Texture *texture);
 
     Body *getBody() const;
+
+    void setBody(Body *body);
 
     void show(Camera &camera) const;
 
 private:
     Body* body;
     Model* model;
+    Texture *texture;
+    Shader *shader;
 };
 
 

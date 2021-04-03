@@ -12,24 +12,16 @@ public:
     Model(Mesh &mesh, Shader &shader);
     ~Model();
 
-    void setTexture(const Texture &texture);
+    void use() const;
 
-    void setPosition(const glm::vec3 &position);
+    void showAt(Camera &camera, const glm::mat4 &transformation) const;
 
-    void show(Camera &camera);
-
-    void use();
-
+    Shader &shader;
+private:
     GLuint id;
     GLuint bufferId;
-    Shader shader;
 
-private:
     Mesh &mesh;
-    glm::vec3 position;
-    glm::mat4 posModel;
-    bool text = false;
-    const Texture *texture;
 };
 
 #endif //TILESGE_MODEL_H

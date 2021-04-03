@@ -4,15 +4,15 @@
 
 #include "physics/Body.h"
 
-Body::Body(Model *model, const glm::vec3 &position, float mass) {
-    Body::model = model;
+Body::Body(GraphicsObject *go, const glm::vec3 &position, float mass) {
+    Body::go = go;
     setPosition(position);
     Body::mass = mass;
     invMass = mass == 0 ? 0 : 1.0f / mass;
 }
 
 Body::Body(const Body *body){
-    Body::model = body->model;
+    Body::go = body->go;
     Body::restitution = body->restitution;
     Body::mass = body->mass;
     Body::invMass = body->invMass;
@@ -21,6 +21,7 @@ Body::Body(const Body *body){
     Body::acceleration = body->acceleration;
     Body::permAcceleration = body->permAcceleration;
     Body::moving = body->moving;
+    Body::transormation = body->transormation;
     computeAABB();
 }
 
@@ -33,12 +34,16 @@ void Body::merge(const Body *body) {
     Body::acceleration = body->acceleration;
     Body::permAcceleration = body->permAcceleration;
     Body::moving = body->moving;
+    Body::transormation = body->transormation;
     computeAABB();
 }
 
 void Body::setPosition(const glm::vec3 &position) {
     Body::position = position;
-    model->setPosition(position);
+    transormation = glm::mat4(1.0f);
+    transormation = glm::translate(transormation, position);
+//    transormation = glm::rotate(transormation, position->getRotationAngle(), position->getRotation());
+
     computeAABB();
 }
 
@@ -69,7 +74,7 @@ void Body::addAcceleration(const glm::vec3 &delta) {
 }
 
 void Body::show(Camera &camera) {
-    model->show(camera);
+    go->showAt(camera, transormation);
 }
 
 const glm::vec3 &Body::getPosition() const {
@@ -111,4 +116,8 @@ AABB *Body::getAabb() const {
 
 Body::~Body() {
     delete aabb;
+}
+
+const glm::mat4 &Body::getTransormation() const {
+    return transormation;
 }

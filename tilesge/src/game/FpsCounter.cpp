@@ -4,7 +4,7 @@
 
 #include "game/FpsCounter.h"
 
-void FpsCounter::registerFps(float deltaTime) {
+void FpsCounter::registerFps(double deltaTime) {
     cachedFps += deltaTime - dts[fpsPointer];
     dts[fpsPointer] = deltaTime;
     fpsPointer = (fpsPointer + 1) % fpl;
@@ -13,6 +13,6 @@ void FpsCounter::registerFps(float deltaTime) {
         filled++;
 }
 
-float FpsCounter::getFps() const {
+double FpsCounter::getFps() const {
     return filled / cachedFps;
 }

@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
+#set(BUILD_SHARED_LIBS true)
+#set(SPDLOG_BUILD_SHARED true)
 project(tilesge)
 
 add_subdirectory(tilesge)

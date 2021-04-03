@@ -4,7 +4,7 @@
 
 #include "engine/GameObject.h"
 
-GameObject::GameObject(Body *body, Model *model) : body(body), model(model) {}
+GameObject::GameObject(Body *body, Shader* shader, Model *model, Texture *texture) : body(body), model(model), texture(texture) {}
 
 Body *GameObject::getBody() const {
     return body;
@@ -15,5 +15,6 @@ void GameObject::setBody(Body *body) {
 }
 
 void GameObject::show(Camera &camera) const {
-    model->show(camera);
+    texture->bind();
+    body->show(camera);
 }

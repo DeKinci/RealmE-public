@@ -2,12 +2,17 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "graphics/ShaderLoader.h"
 
+GLuint Shader::lastUsedGLId = 0;
+
 Shader::Shader(const char *vertexName, const char *fragmentName) {
     this->ID = ShaderLoader::loadShaders(vertexName, fragmentName);
 }
 
 void Shader::use() {
-    glUseProgram(this->ID);
+    if (lastUsedGLId != Shader::ID) {
+        glUseProgram(Shader::ID);
+        lastUsedGLId = Shader::ID;
+    }
 }
 
 void Shader::attrib(const GLchar *name, GLint size, GLenum type, GLboolean normalized, GLsizei stride,

@@ -17,8 +17,6 @@ public:
 
     virtual ~AppWindow();
 
-    void setKeyPress(std::function<void(int)> callback);
-
     bool readyToClose();
 
     void update();
@@ -28,7 +26,6 @@ public:
     Camera *getCamera() const;
 
     Projector *getProjector() const;
-
 private:
     int width;
     int height;
@@ -39,8 +36,6 @@ private:
     GLFWwindow *window;
     Camera *camera;
     Projector *projector;
-
-    std::function<void(int)> keyPress;
 
     void keyCallback(int key, int scancode, int action, int mods);
 

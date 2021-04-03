@@ -6,6 +6,7 @@
 
 #include <utility>
 #include <glm/gtc/matrix_transform.hpp>
+#include "input/KeyboardManager.h"
 
 AppWindow::AppWindow(size_t width, size_t height, bool debug) :
         camera(new Camera()),
@@ -74,21 +75,22 @@ AppWindow::AppWindow(size_t width, size_t height, bool debug) :
     glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 }
 
 void AppWindow::keyCallback(int key, int scancode, int action, int mods) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     if (debug) {
-        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     }
-    keyPress(key);
+
+    KeyboardManager::callback(window, key, scancode, action, mods);
 }
 
 void AppWindow::cursorCallback(double xpos, double ypos) {
@@ -124,10 +126,6 @@ void AppWindow::sizeCallback(int newWidth, int newHeight) {
     camera->setAspectRatio((float) width / (float) height);
 }
 
-void AppWindow::setKeyPress(std::function<void(int)> callback) {
-    AppWindow::keyPress = std::move(callback);
-}
-
 bool AppWindow::readyToClose() {
     return glfwWindowShouldClose(window);
 }
@@ -138,6 +136,9 @@ void AppWindow::update() {
 }
 
 AppWindow::~AppWindow() {
+    delete camera;
+    delete projector;
+
     glfwSetWindowShouldClose(window, GLFW_TRUE);
     glfwDestroyWindow(window);
 }

@@ -7,30 +7,51 @@
 
 
 Body *CubeForge::createCube(Texture &texture, int x, int y, int z, float mass) {
-    auto attributes = new ShaderAttribute *[2];
-    attributes[0] = new ShaderAttribute("aPos", 3, 0);
-    attributes[1] = new ShaderAttribute("aTexCoord", 2, 3);
+    auto model = texturedCube();
+    auto go = new GraphicsObject(*model, &texture);
 
-    auto mesh = new Mesh(vertices, sizeof(vertices), attributes, 2);
-    auto model = new Model(*mesh, Shaders::basicShader());
-    model->setTexture(texture);
-
-    auto body = new Body(model, glm::vec3(x, y, z), mass);
+    auto body = new Body(go, glm::vec3(x, y, z), mass);
     return body;
 }
 
-Model *CubeForge::createLight(int x, int y, int z) {
-    auto attributes = new ShaderAttribute *[2];
-    attributes[0] = new ShaderAttribute("aPos", 3, 0);
+Body *CubeForge::createLight(int x, int y, int z) {
+    auto light = lightCube();
+    auto go = new GraphicsObject(*light);
 
-    auto mesh = new Mesh(lightVertices, sizeof(lightVertices), attributes, 1);
-    auto light = new Model(*mesh, Shaders::lightShader());
-    light->setPosition(glm::vec3(x, y, z));
+    auto body = new Body(go, glm::vec3(x, y, z), INF_MASS);
+    return body;
+}
 
-    light->shader.set("objectColor", glm::vec3(1.0f, 1.0f, 0.5f));
-    light->shader.set("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+Model *CubeForge::texturedCube() {
+    static Model *model;
 
-    return light;
+    if (!model) {
+        static auto attributes = new ShaderAttribute *[2];
+        attributes[0] = new ShaderAttribute("aPos", 3, 0);
+        attributes[1] = new ShaderAttribute("aTexCoord", 2, 3);
+
+        auto mesh = new Mesh(vertices, sizeof(vertices), attributes, 2);
+        model = new Model(*mesh, Shaders::basicShader());
+    }
+
+    return model;
+}
+
+Model *CubeForge::lightCube() {
+    static Model *model;
+
+    if (!model) {
+        auto attributes = new ShaderAttribute *[2];
+        attributes[0] = new ShaderAttribute("aPos", 3, 0);
+
+        auto mesh = new Mesh(lightVertices, sizeof(lightVertices), attributes, 1);
+        model = new Model(*mesh, Shaders::lightShader());
+
+        model->shader.set("objectColor", glm::vec3(1.0f, 1.0f, 0.5f));
+        model->shader.set("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    }
+
+    return model;
 }
 
 float CubeForge::vertices[] = {

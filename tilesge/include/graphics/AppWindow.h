@@ -21,8 +21,6 @@ public:
 
     void update();
 
-    int getKeyState(int key);
-
     Camera *getCamera() const;
 
     Projector *getProjector() const;

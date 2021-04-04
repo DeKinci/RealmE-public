@@ -4,7 +4,6 @@
 
 #include "graphics/AppWindow.h"
 
-#include <utility>
 #include <glm/gtc/matrix_transform.hpp>
 #include "input/KeyboardManager.h"
 
@@ -145,10 +144,6 @@ AppWindow::~AppWindow() {
 
 Projector *AppWindow::getProjector() const {
     return projector;
-}
-
-int AppWindow::getKeyState(int key) {
-    return glfwGetKey(window, key);
 }
 
 Camera *AppWindow::getCamera() const {

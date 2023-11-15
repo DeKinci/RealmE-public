@@ -4,7 +4,7 @@ A voxel game (engine) with a build-in modding environment, not yet ready for a p
 Previously known as a low-poly game library TilesGE. Realm Engine is being developed in a private repository, with this repo containing an overview and updates.
 For nostalgic purposes code of one of the early versions of TilesGE is available.
 
-[Editor overview](docs/Realme editor.png)
+![Editor overview](docs/Realme editor.png)
 
 Editor features:
 - ECS entity viewer and editor

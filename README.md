@@ -16,3 +16,14 @@ Editor features:
 - Tracy profiler integration
 - Debug gizmo drawing with groups
 - Instrumented debugger and value watcher, aware of the game loop
+
+## Tech stack
+- C++ 20, CMake
+- [BGFX](https://github.com/bkaradzic/bgfx) as a GPU abstraction
+- [SDL](https://www.libsdl.org) as windows and input abstraction
+- [EnTT](https://github.com/skypjack/entt) core entity component system
+- [Dear ImGui](https://github.com/ocornut/imgui) developer tools UI
+- [protobuf](https://github.com/protocolbuffers/protobuf) binary serialization
+- [Valve GameNetworkingSockets](https://github.com/ValveSoftware/GameNetworkingSockets) UDP networking library
+- [kompute](https://github.com/KomputeProject/kompute) Vulkan GPGPU abstraction
+- [Tracy](https://github.com/wolfpld/tracy) frame profiler

@@ -1,4 +1,4 @@
-# RealmE - Realm Engine
+# RealmE - Realm Engine public page
 A voxel game (engine) with a build-in modding environment, not yet ready for a public release
 
 Previously known as a low-poly game library TilesGE. Realm Engine is being developed in a private repository, with this repo containing an overview and updates.

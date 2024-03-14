@@ -15,7 +15,7 @@ Editor features:
 - Log tab with colors!
 - Tracy profiler integration
 - Debug gizmo drawing with groups
-- Instrumented debugger and value watcher, aware of the game loop
+- Instrumented debugger and value watcher, aware of the applcation loop
 
 ## Tech stack
 - C++ 20, CMake
